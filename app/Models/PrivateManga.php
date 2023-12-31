@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PrivateManga extends Model
 {
@@ -55,6 +58,36 @@ class PrivateManga extends Model
     public function getRouteKeyName(): string
     {
         return 'slug';
+    }
+
+    public function releaseStatus(): BelongsTo
+    {
+        return $this->belongsTo(ReleaseStatus::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function mangaType(): BelongsTo
+    {
+        return $this->belongsTo(MangaType::class);
+    }
+
+    public function privateMangaGenres(): BelongsToMany
+    {
+        return $this->belongsToMany(PrivateMangaGenre::class, 'private_manga_genres');
+    }
+
+    public function privateMangaReadlists(): BelongsToMany
+    {
+        return $this->belongsToMany(PrivateMangaReadlist::class, 'private_manga_readlists');
+    }
+
+    public function privateMangaReadStatus(): HasMany
+    {
+        return $this->hasMany(PrivateMangaReadStatus::class, 'private_manga_read_statuses');
     }
 
 }
