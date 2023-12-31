@@ -3,9 +3,10 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\ReleaseStatus;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ReleaseStatus>
+ * @extends Factory<ReleaseStatus>
  */
 class ReleaseStatusFactory extends Factory
 {

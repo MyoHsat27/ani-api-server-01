@@ -3,12 +3,12 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\MangaType;
+use App\Models\WatchStatus;
 
 /**
- * @extends Factory<MangaType>
+ * @extends Factory<WatchStatus>
  */
-class MangaTypeFactory extends Factory
+class WatchStatusFactory extends Factory
 {
     /**
      * Define the model's default state.

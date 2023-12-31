@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use App\Models\MangaType;
 use App\Models\Status;
 use App\Models\ReleaseStatus;
+use App\Models\WatchStatus;
 
 class DatabaseSeeder extends Seeder
 {
@@ -36,13 +37,20 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // Default Status Types
-        $statusTypes = ['on-going', 'coming-soon', 'finished', 'dropped', 'hiatus'];
-        foreach ($statusTypes as $type) {
+        // Default Release Status Types
+        $releaseStatusTypes = ['on-going', 'coming-soon', 'finished', 'dropped', 'hiatus'];
+        foreach ($releaseStatusTypes as $type) {
             ReleaseStatus::factory()->create([
                 'type' => $type,
             ]);
         }
 
+        // Default Status Types
+        $watchStatusTypes = ['currently', 'completed', 'dropped', 'on-hold', 'plan-to-watch'];
+        foreach ($watchStatusTypes as $type) {
+            WatchStatus::factory()->create([
+                'type' => $type,
+            ]);
+        }
     }
 }
