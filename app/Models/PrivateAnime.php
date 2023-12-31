@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
 
-class PrivateManga extends Model
+class PrivateAnime extends Model
 {
     use HasFactory, Searchable;
 
@@ -18,16 +18,13 @@ class PrivateManga extends Model
     protected $fillable = [
         'name',
         'slug',
-        'description',
         'alt_name',
-        'chapter',
+        'description',
         'resource_url',
         'image_url',
         'release_status_id',
-        'manga_type_id',
         'user_id',
     ];
-
     /**
      * The attributes that should be cast.
      *
@@ -45,9 +42,9 @@ class PrivateManga extends Model
     public function toSearchableArray(): array
     {
         return [
-            'name' => $this->name,
-            'alt_name' => $this->alt_name,
+            'name'        => $this->name,
             'description' => $this->description,
+            'alt_name' => $this->alt_name,
         ];
     }
 
