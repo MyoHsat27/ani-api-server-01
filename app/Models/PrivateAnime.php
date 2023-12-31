@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
 
 class PrivateAnime extends Model
@@ -48,7 +51,41 @@ class PrivateAnime extends Model
         ];
     }
 
+    public function releaseStatus():BelongsTo
+    {
+        return $this->belongsTo(ReleaseStatus::class);
+    }
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function privateAnimeWatchStatus():HasMany
+    {
+        return $this->hasMany(PrivateAnimeWatchStatus::class);
+    }
+
+    public function privateAnimeSeasons(): HasMany
+    {
+        return $this->hasMany(PrivateAnimeSeason::class);
+    }
+
+    public function privateAnimeMovies(): HasMany
+    {
+        return $this->hasMany(PrivateAnimeMovie::class);
+    }
+
+    public function privateGenres(): BelongsToMany
+    {
+        return $this->belongsToMany(PrivateGenre::class, 'private_anime_genres');
+    }
+
+    public function privateAnimeWatchlist():HasMany
+    {
+        return $this->hasMany(PrivateAnimeWatchlist::class);
+    }
+    
     public function getRouteKeyName(): string
     {
         return 'slug';
