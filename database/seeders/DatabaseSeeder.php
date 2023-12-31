@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\MangaType;
+use App\Models\Status;
+use App\Models\ReleaseStatus;
 
 class DatabaseSeeder extends Seeder
 {
@@ -31,8 +33,16 @@ class DatabaseSeeder extends Seeder
         foreach ($mangaTypes as $type) {
             MangaType::factory()->create([
                 'type' => $type,
-                'slug' => Str::slug($type),
             ]);
         }
+
+        // Default Status Types
+        $statusTypes = ['on-going', 'coming-soon', 'finished', 'dropped', 'hiatus'];
+        foreach ($statusTypes as $type) {
+            ReleaseStatus::factory()->create([
+                'type' => $type,
+            ]);
+        }
+
     }
 }
