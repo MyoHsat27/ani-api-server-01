@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string("season");
             $table->integer("episode");
-            $table->foreignId('favourite_id')->constrained();
+            $table->foreignId('favourite_level_id')->constrained();
             $table->foreignId('watch_status_id')->constrained();
             $table->foreignId('private_anime_id')->constrained();
             $table->foreignId('user_id')->constrained();
