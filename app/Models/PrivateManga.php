@@ -10,6 +10,7 @@ class PrivateManga extends Model
 {
     use HasFactory, Searchable;
 
+
     /**
      * The attributes that are mass assignable.
      *
@@ -45,12 +46,11 @@ class PrivateManga extends Model
     public function toSearchableArray(): array
     {
         return [
-            'name' => $this->name,
-            'alt_name' => $this->alt_name,
+            'name'        => $this->name,
+            'alt_name'    => $this->alt_name,
             'description' => $this->description,
         ];
     }
-
 
     public function getRouteKeyName(): string
     {

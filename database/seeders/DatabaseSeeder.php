@@ -61,5 +61,19 @@ class DatabaseSeeder extends Seeder
                 'level' => $level,
             ]);
         }
+
+
+        $this->call([
+            UserSeeder::class,
+            PrivateMangaSeeder::class,
+            PrivateAnimeSeeder::class,
+            PrivateGenreSeeder::class,
+            PrivateAnimeSeasonSeeder::class,
+            PrivateAnimeMovieSeeder::class,
+            PrivateAnimeWatchStatusSeeder::class,
+            PrivateMangaReadStatusSeeder::class,
+            ReadlistSeeder::class,
+            WatchlistSeeder::class,
+        ]);
     }
 }
