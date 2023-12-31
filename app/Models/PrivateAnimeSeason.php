@@ -4,11 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Scout\Searchable;
 
-class PrivateManga extends Model
+class PrivateAnimeSeason extends Model
 {
-    use HasFactory, Searchable;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -19,15 +18,10 @@ class PrivateManga extends Model
         'name',
         'slug',
         'description',
-        'alt_name',
-        'chapter',
-        'resource_url',
-        'image_url',
+        'episode',
         'release_status_id',
-        'manga_type_id',
-        'user_id',
+        'private_anime_id',
     ];
-
     /**
      * The attributes that should be cast.
      *
@@ -36,21 +30,6 @@ class PrivateManga extends Model
     protected $casts = [
         'created_at' => 'datetime',
     ];
-
-    /**
-     * Get the indexable data array for the model.
-     *
-     * @return array<string, mixed>
-     */
-    public function toSearchableArray(): array
-    {
-        return [
-            'name' => $this->name,
-            'alt_name' => $this->alt_name,
-            'description' => $this->description,
-        ];
-    }
-
 
     public function getRouteKeyName(): string
     {

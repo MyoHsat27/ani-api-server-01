@@ -29,4 +29,9 @@ class PrivateGenre extends Model
         'created_at' => 'datetime',
     ];
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
 }
