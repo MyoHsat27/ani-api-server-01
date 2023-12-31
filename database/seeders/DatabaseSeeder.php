@@ -11,6 +11,7 @@ use App\Models\MangaType;
 use App\Models\Status;
 use App\Models\ReleaseStatus;
 use App\Models\WatchStatus;
+use App\Models\FavouriteLevel;
 
 class DatabaseSeeder extends Seeder
 {
@@ -45,11 +46,19 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // Default Status Types
+        // Default Watch Status Types
         $watchStatusTypes = ['currently', 'completed', 'dropped', 'on-hold', 'plan-to-watch'];
         foreach ($watchStatusTypes as $type) {
             WatchStatus::factory()->create([
-                'type' => $type,
+                'status' => $type,
+            ]);
+        }
+
+        // Default Favourite Levels
+        $favouriteLevels = ['trash', 'bad', 'normal', 'good', 'best', 'goat'];
+        foreach ($favouriteLevels as $level) {
+            FavouriteLevel::factory()->create([
+                'level' => $level,
             ]);
         }
     }

@@ -10,9 +10,9 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('watch_statuses', function (Blueprint $table) {
+        Schema::create('favourite_levels', function (Blueprint $table) {
             $table->id();
-            $table->enum('status', ['currently', 'completed', 'dropped', 'on-hold', 'plan-to-watch']);
+            $table->enum('level', ['trash', 'bad', 'normal', 'good', 'best', 'goat']);
             $table->timestamps();
         });
     }
@@ -22,6 +22,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('watch_statuses');
+        Schema::dropIfExists('favourite_levels');
     }
 };
