@@ -25,9 +25,9 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'              => fake()->name(),
+            'username'          => fake()->name(),
             'slug'              => function (array $attributes) {
-                return Str::slug($attributes['name']);
+                return Str::slug($attributes['username']);
             },
             'email'             => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),

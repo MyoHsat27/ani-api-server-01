@@ -10,6 +10,7 @@ use App\Http\Resources\v1\UserResource;
 use App\Http\Requests\API\v1\LoginUserRequest;
 use Illuminate\Support\Facades\Auth;
 use App\CustomProvider\ResponseProvider;
+use Illuminate\Support\Str;
 
 class AuthControllerV1
 {
@@ -53,7 +54,8 @@ class AuthControllerV1
     public function register(StoreUserRequest $request): JsonResponse
     {
         User::create([
-            'name'     => $request->name,
+            'username'     => $request->username,
+            'slug'     => Str::slug($request->username),
             'email'    => $request->email,
             'password' => $request->password,
         ]);
