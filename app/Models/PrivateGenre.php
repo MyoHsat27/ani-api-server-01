@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PrivateGenre extends Model
 {
@@ -19,6 +20,7 @@ class PrivateGenre extends Model
         'name',
         'slug',
         'description',
+        'user_id',
     ];
 
     /**
@@ -34,6 +36,13 @@ class PrivateGenre extends Model
     {
         return 'slug';
     }
+
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
 
     public function private_animes(): BelongsToMany
     {

@@ -45,6 +45,13 @@ class User extends Authenticatable
         'password'          => 'hashed',
     ];
 
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
+
     public function readlists(): HasMany
     {
         return $this->hasMany(Readlist::class);
