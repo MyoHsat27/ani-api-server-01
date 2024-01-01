@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\v1\AuthControllerV1;
+use App\Http\Controllers\API\v1\PrivateAnimeController;
 use App\Http\Controllers\API\v1\PrivateGenreController;
 use App\Http\Controllers\API\v1\PrivateMangaController;
 use App\Http\Controllers\API\v1\WatchlistController;
@@ -18,7 +19,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::apiResource('readlists', ReadlistController::class);
         Route::apiResource('watchlists', WatchlistController::class);
 
-        //        Route::apiResource('animes', AnimeController::class);
+        Route::apiResource('private-animes', PrivateAnimeController::class);
         //        Route::apiResource('favourites', FavouriteController::class)
         //            ->except('update');
 
