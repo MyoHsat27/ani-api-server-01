@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class FavouriteLevel extends Model
 {
@@ -26,4 +27,9 @@ class FavouriteLevel extends Model
     protected $casts = [
         'created_at' => 'datetime',
     ];
+
+    public function privateAnimeWatchStatuses():HasMany
+    {
+        return $this->hasMany(PrivateAnimeWatchStatus::class);
+    }
 }
