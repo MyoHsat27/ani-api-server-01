@@ -61,7 +61,7 @@ class PrivateAnime extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function privateAnimeWatchStatus():HasMany
+    public function privateAnimeWatchStatuses():HasMany
     {
         return $this->hasMany(PrivateAnimeWatchStatus::class);
     }
@@ -81,11 +81,11 @@ class PrivateAnime extends Model
         return $this->belongsToMany(PrivateGenre::class, 'private_anime_genres');
     }
 
-    public function privateAnimeWatchlist():HasMany
+    public function privateAnimeWatchlist():BelongsToMany
     {
-        return $this->hasMany(PrivateAnimeWatchlist::class);
+        return $this->belongsToMany(Watchlist::class,'private_anime_watchlists');
     }
-    
+
     public function getRouteKeyName(): string
     {
         return 'slug';
