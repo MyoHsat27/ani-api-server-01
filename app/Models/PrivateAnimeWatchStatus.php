@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PrivateAnimeWatchStatus extends Model
 {
@@ -31,4 +32,24 @@ class PrivateAnimeWatchStatus extends Model
     protected $casts = [
         'created_at' => 'datetime',
     ];
+
+    public function privateAnime():BelongsTo
+    {
+        return $this->belongsTo(PrivateAnime::class);
+    }
+
+    public function watchStatus():BelongsTo
+    {
+        return $this->belongsTo(WatchStatus::class);
+    }
+
+    public function user():BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function favouriteLevel():BelongsTo
+    {
+        return $this->belongsTo(FavouriteLevel::class);
+    }
 }
