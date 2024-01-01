@@ -3,7 +3,8 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -23,8 +24,24 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        // Handle HTTP Exceptions (Such as : Route Not Found & Method Not Allowed in Route"
+        $this->renderable(function (HttpException $e, $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    "status"  => "error",
+                    "message" => $e->getMessage(),
+                ], $e->getStatusCode());
+            }
+        });
+
+        // Handle Unauthorize HTTP Response
+        $this->renderable(function (AccessDeniedHttpException $e, $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    "status"  => "error",
+                    "message" => $e->getMessage(),
+                ], $e->getStatusCode());
+            }
         });
     }
 }
