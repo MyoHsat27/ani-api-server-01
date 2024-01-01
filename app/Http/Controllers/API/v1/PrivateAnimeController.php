@@ -20,30 +20,24 @@ use Illuminate\Support\Facades\Auth;
 class PrivateAnimeController extends Controller
 {
 
-    /**
-     * @var FilterRepository
-     */
-    protected FilterRepository $filterRepository;
     protected PrivateAnimeGenreController $privateAnimeGenreController;
     protected CustomResponse $customResponse;
     /**
      * PrivateMangaController constructor
      */
     public function __construct( CustomResponse $customResponse,
-        FilterRepository $filterRepository,
         PrivateAnimeGenreController $privateAnimeGenreController)
     {
         $this->customResponse = $customResponse;
-        $this->filterRepository = $filterRepository;
         $this->privateAnimeGenreController = $privateAnimeGenreController;
     }
     /**
      * Display a listing of the resource.
      */
-    public function index(PrivateAnimeFilterRequest $request,User $user)
+    public function index(FilterRepository $filterRepository,PrivateAnimeFilterRequest $request,User $user)
     {
          // Get the initial builder with search filtering
-         $query = $this->filterRepository->filterBySearchKeyword($user,
+         $query = $filterRepository->filterBySearchKeyword($user,
          PrivateAnime::class,
          'privateAnimes',
          $request->input('search')
@@ -53,8 +47,8 @@ class PrivateAnimeController extends Controller
      $filters = [
          "filterByStatus" => $request->input('status'),
      ];
-     $this->filterRepository->applyFilters($query, $filters);
-     $privateAnimes = $this->filterRepository->paginate($query);
+     $filteredResult = $filterRepository->applyFilters($query, $filters);
+     $privateAnimes = $filterRepository->paginate($filteredResult,$request);
 
      return $this->customResponse->success(new PrivateAnimeCollection($privateAnimes));
     }

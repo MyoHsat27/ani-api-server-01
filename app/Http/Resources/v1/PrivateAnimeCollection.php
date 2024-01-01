@@ -6,7 +6,7 @@ use App\Http\Resources\Traits\PaginatableTrait;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class PrivateAnimeCollection extends ResourceCollection
+class PrivateAnimeCollection extends BaseResourceCollection
 {
     use PaginatableTrait;
     /**
@@ -16,9 +16,10 @@ class PrivateAnimeCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
-        return  [
-            'animes' => PrivateAnimeResource::collection($this->collection),
-            'pagination' => $this->paginationDetails($this->resource->toArray()),
+        $response =  [
+            'animes' => PrivateAnimeResource::collection($this->collection)
         ];
+
+        return $this->addPaginationIfRequested($response,$request);
     }
 }

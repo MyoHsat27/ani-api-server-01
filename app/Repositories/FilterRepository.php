@@ -26,7 +26,7 @@ class FilterRepository
 
     private function filterSupported(string $filter): bool
     {
-        return in_array($filter, ['searchKeyword', 'chapterFrom', 'releaseStatus', 'mangaType']);
+        return in_array($filter, ['searchKeyword', 'chapterFrom', 'releaseStatus', 'mangaType','filterByStatus']);
     }
 
     /**
