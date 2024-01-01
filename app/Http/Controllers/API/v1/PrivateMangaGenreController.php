@@ -9,24 +9,26 @@ use App\Models\PrivateGenre;
 use App\Models\User;
 use App\Http\Resources\v1\PrivateGenreResource;
 use App\Http\Response\CustomResponse;
+use App\Repositories\FilterRepository;
 
 class PrivateMangaGenreController extends Controller
 {
     protected CustomResponse $customResponse;
-
 
     public function __construct(CustomResponse $customResponse)
     {
         $this->customResponse = $customResponse;
     }
 
-
     /**
      * Display a listing of the resource.
      */
     public function index(User $user, PrivateManga $privateManga)
     {
-        return $this->customResponse->success(PrivateGenreResource::collection($privateManga->privateGenres));
+
+        return $this->customResponse->success(PrivateGenreResource::collection($privateManga->privateGenres
+        )
+        );
     }
 
     /**
@@ -36,6 +38,7 @@ class PrivateMangaGenreController extends Controller
     {
         $genres = $request->input('genres', []);
         $manga->privateGenres()->attach($genres);
+
         return $this->customResponse->createdResponse();
     }
 

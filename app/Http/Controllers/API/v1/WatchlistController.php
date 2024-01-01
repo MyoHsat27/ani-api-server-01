@@ -12,6 +12,8 @@ use App\Models\User;
 use App\Http\Resources\v1\WatchlistResource;
 use App\Http\Resources\v1\WatchlistCollection;
 use App\Http\Response\CustomResponse;
+use App\Repositories\FilterRepository;
+use Illuminate\Http\Request;
 
 class WatchlistController extends Controller
 {
@@ -25,9 +27,18 @@ class WatchlistController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(User $user)
+    public function index(FilterRepository $filterRepository, Request $request, User $user)
     {
-        return $this->customResponse->success(new WatchlistCollection($user->watchlists));
+        // Get the initial builder with search filtering
+        $query = $filterRepository->filterBySearchKeyword($user,
+            Watchlist::class,
+            'watchlists',
+            $request->input('search')
+        );
+
+        $watchlists = $filterRepository->paginate($query, $request);
+
+        return $this->customResponse->success(new WatchlistCollection($watchlists));
     }
 
     /**

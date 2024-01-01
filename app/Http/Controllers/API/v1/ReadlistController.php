@@ -12,6 +12,8 @@ use App\Models\User;
 use App\Http\Resources\v1\ReadlistResource;
 use App\Http\Resources\v1\ReadlistCollection;
 use App\Http\Response\CustomResponse;
+use App\Repositories\FilterRepository;
+use Illuminate\Http\Request;
 
 class ReadlistController extends Controller
 {
@@ -25,9 +27,18 @@ class ReadlistController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(User $user)
+    public function index(FilterRepository $filterRepository, User $user, Request $request)
     {
-        return $this->customResponse->success(new ReadlistCollection($user->readlists));
+        // Get the initial builder with search filtering
+        $query = $filterRepository->filterBySearchKeyword($user,
+            Readlist::class,
+            'readlists',
+            $request->input('search')
+        );
+
+        $readlists = $filterRepository->paginate($query, $request);
+
+        return $this->customResponse->success(new ReadlistCollection($readlists));
     }
 
     /**
@@ -41,6 +52,7 @@ class ReadlistController extends Controller
             'description' => $request->description,
             'user_id'     => Auth::id(),
         ]);
+
         return $this->customResponse->createdResponse();
     }
 
