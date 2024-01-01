@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class PrivateGenre extends Model
 {
@@ -32,6 +33,16 @@ class PrivateGenre extends Model
     public function getRouteKeyName(): string
     {
         return 'slug';
+    }
+
+    public function private_animes(): BelongsToMany
+    {
+        return $this->belongsToMany(PrivateAnime::class, 'private_anime_genres');
+    }
+
+    public function private_mangas(): BelongsToMany
+    {
+        return $this->belongsToMany(PrivateManga::class, 'private_manga_genres');
     }
 
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MangaType extends Model
 {
@@ -25,5 +26,10 @@ class MangaType extends Model
     protected $casts = [
         'created_at' => 'datetime',
     ];
+
+    public function privateMangas(): HasMany
+    {
+        return $this->hasMany(PrivateManga::class);
+    }
 
 }
