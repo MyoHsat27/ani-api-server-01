@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\PrivateManga;
 use App\Models\PrivateGenre;
 use App\Models\User;
-use App\Models\Manga;
-use App\Http\Resources\v1\GenreResource;
 use App\CustomProvider\ResponseProvider;
 use App\Http\Resources\v1\PrivateGenreResource;
 

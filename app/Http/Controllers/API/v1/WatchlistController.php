@@ -11,20 +11,18 @@ use App\Http\Requests\API\v1\UpdateWatchlistRequest;
 use App\Models\User;
 use App\Http\Resources\v1\WatchlistResource;
 use App\CustomProvider\ResponseProvider;
+use App\Http\Resources\v1\WatchlistCollection;
 
 class WatchlistController extends Controller
 {
     use ResponseProvider;
+
     /**
      * Display a listing of the resource.
      */
     public function index(User $user)
     {
-        return $this->jsonResponse(200,
-            "success",
-            null,
-            WatchlistResource::collection($user->watchlists)
-        );
+        return new WatchlistCollection($user->watchlists);
     }
 
     /**

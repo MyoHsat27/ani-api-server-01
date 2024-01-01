@@ -10,19 +10,19 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\API\v1\UpdateReadlistRequest;
 use App\Models\User;
 use App\Http\Resources\v1\ReadlistResource;
+use App\CustomProvider\ResponseProvider;
+use App\Http\Resources\v1\ReadlistCollection;
 
 class ReadlistController extends Controller
 {
+    use ResponseProvider;
+
     /**
      * Display a listing of the resource.
      */
     public function index(User $user)
     {
-        return $this->jsonResponse(200,
-            "success",
-            null,
-            ReadlistResource::collection($user->readlists)
-        );
+        return new ReadlistCollection($user->readlists);
     }
 
     /**
