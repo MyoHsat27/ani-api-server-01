@@ -3,9 +3,8 @@
 namespace App\Http\Resources\v1;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class PrivateGenreCollection extends ResourceCollection
+class PrivateGenreCollection extends BaseResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -14,8 +13,10 @@ class PrivateGenreCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
-        return [
-            'private-genres' => PrivateGenreResource::collection($this->collection)
+        $response = [
+            'private-genres' => PrivateGenreResource::collection($this->collection),
         ];
+
+        return $this->addPaginationIfRequested($response, $request);
     }
 }

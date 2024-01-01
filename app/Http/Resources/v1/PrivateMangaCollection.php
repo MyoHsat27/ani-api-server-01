@@ -3,10 +3,9 @@
 namespace App\Http\Resources\v1;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Http\Resources\Traits\PaginatableTrait;
 
-class PrivateMangaCollection extends ResourceCollection
+class PrivateMangaCollection extends BaseResourceCollection
 {
     use PaginatableTrait;
 
@@ -17,9 +16,10 @@ class PrivateMangaCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
-        return [
-            'private-mangas'     => PrivateMangaResource::collection($this->collection),
-            'pagination' => $this->paginationDetails($this->resource->toArray()),
+        $response = [
+            'private-mangas' => PrivateMangaResource::collection($this->collection),
         ];
+
+        return $this->addPaginationIfRequested($response, $request);
     }
 }

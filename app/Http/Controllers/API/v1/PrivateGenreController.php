@@ -12,6 +12,8 @@ use App\Http\Requests\API\v1\UpdatePrivateGenreRequest;
 use App\Models\User;
 use App\Http\Resources\v1\PrivateGenreCollection;
 use App\Http\Response\CustomResponse;
+use App\Repositories\FilterRepository;
+use Illuminate\Http\Request;
 
 class PrivateGenreController extends Controller
 {
@@ -25,9 +27,12 @@ class PrivateGenreController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(User $user)
+    public function index(FilterRepository $filterRepository, User $user, Request $request)
     {
-        return $this->customResponse->success(new PrivateGenreCollection($user->privateGenres));
+        $privateGenres = $filterRepository->paginate($user->privateGenres()->getQuery(), $request);
+
+
+        return $this->customResponse->success(new PrivateGenreCollection($privateGenres));
     }
 
     /**
