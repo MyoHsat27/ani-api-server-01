@@ -18,7 +18,7 @@ class PrivateMangaReadStatusFactory extends Factory
     public function definition(): array
     {
         return [
-            'chapter'          => $this->faker->randomNumber(),
+            'chapter'          => $this->faker->numberBetween(1,100),
             'favourite_level_id'     => $this->faker->randomElement([1, 2, 3, 4, 5, 6]),
             'watch_status_id'  => $this->faker->randomElement([1, 2, 3, 4, 5]),
             'private_manga_id' => $this->faker->numberBetween(1, 10),

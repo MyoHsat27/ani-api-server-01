@@ -8,7 +8,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\MangaType;
-use App\Models\Status;
 use App\Models\ReleaseStatus;
 use App\Models\WatchStatus;
 use App\Models\FavouriteLevel;
@@ -22,7 +21,7 @@ class DatabaseSeeder extends Seeder
     {
         // Test User Account
         User::factory()->create([
-            'name'              => 'Tester',
+            'username'          => 'Tester',
             'slug'              => 'tester',
             'email'             => 'test@gmail.com',
             'email_verified_at' => now(),
