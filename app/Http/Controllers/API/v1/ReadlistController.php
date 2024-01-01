@@ -10,19 +10,24 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\API\v1\UpdateReadlistRequest;
 use App\Models\User;
 use App\Http\Resources\v1\ReadlistResource;
-use App\CustomProvider\ResponseProvider;
 use App\Http\Resources\v1\ReadlistCollection;
+use App\Http\Response\CustomResponse;
 
 class ReadlistController extends Controller
 {
-    use ResponseProvider;
+    protected CustomResponse $customResponse;
+
+    public function __construct(CustomResponse $customResponse)
+    {
+        $this->customResponse = $customResponse;
+    }
 
     /**
      * Display a listing of the resource.
      */
     public function index(User $user)
     {
-        return new ReadlistCollection($user->readlists);
+        return $this->customResponse->success(new ReadlistCollection($user->readlists));
     }
 
     /**
@@ -36,8 +41,7 @@ class ReadlistController extends Controller
             'description' => $request->description,
             'user_id'     => Auth::id(),
         ]);
-
-        return $this->jsonResponse(201, 'success', 'Created successfully');
+        return $this->customResponse->createdResponse();
     }
 
     /**
@@ -45,7 +49,7 @@ class ReadlistController extends Controller
      */
     public function show(User $user, Readlist $readlist)
     {
-        return $this->jsonResponse(200, 'success', null, ReadlistResource::make($readlist));
+        return $this->customResponse->success(ReadlistResource::make($readlist));
     }
 
     /**
@@ -60,7 +64,7 @@ class ReadlistController extends Controller
             'user_id'     => Auth::id(),
         ]);
 
-        return $this->jsonResponse(200, 'success', 'Updated successfully');
+        return $this->customResponse->updatedResponse();
     }
 
     /**
@@ -70,6 +74,6 @@ class ReadlistController extends Controller
     {
         $readlist->delete();
 
-        return $this->jsonResponse(200, 'success', 'Deleted successfully');
+        return $this->customResponse->deletedResponse();
     }
 }

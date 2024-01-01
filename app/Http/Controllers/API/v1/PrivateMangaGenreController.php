@@ -7,19 +7,26 @@ use Illuminate\Http\Request;
 use App\Models\PrivateManga;
 use App\Models\PrivateGenre;
 use App\Models\User;
-use App\CustomProvider\ResponseProvider;
 use App\Http\Resources\v1\PrivateGenreResource;
+use App\Http\Response\CustomResponse;
 
 class PrivateMangaGenreController extends Controller
 {
-    use ResponseProvider;
+    protected CustomResponse $customResponse;
+
+
+    public function __construct(CustomResponse $customResponse)
+    {
+        $this->customResponse = $customResponse;
+    }
+
 
     /**
      * Display a listing of the resource.
      */
     public function index(User $user, PrivateManga $privateManga)
     {
-        return PrivateGenreResource::collection($privateManga->privateGenres);
+        return $this->customResponse->success(PrivateGenreResource::collection($privateManga->privateGenres));
     }
 
     /**
@@ -29,8 +36,7 @@ class PrivateMangaGenreController extends Controller
     {
         $genres = $request->input('genres', []);
         $manga->privateGenres()->attach($genres);
-
-        return response()->json(['message' => 'Genres added successfully'], 201);
+        return $this->customResponse->createdResponse();
     }
 
     /**
@@ -43,7 +49,7 @@ class PrivateMangaGenreController extends Controller
         $updatedGenres = $request->input('genres', []);
         $manga->privateGenres()->attach($updatedGenres);
 
-        return $this->jsonResponse(200, 'success', 'Genres updated successfully');
+        return $this->customResponse->updatedResponse();
     }
 
     /**
@@ -53,7 +59,7 @@ class PrivateMangaGenreController extends Controller
     {
         $manga->privateGenres()->detach();
 
-        return $this->jsonResponse(200, 'success', 'Genres removed successfully');
+        return $this->customResponse->deletedResponse();
     }
 
     /**
@@ -63,7 +69,7 @@ class PrivateMangaGenreController extends Controller
     {
         $manga->privateGenres()->attach($request->genre_id);
 
-        return $this->jsonResponse(201, 'success', 'Created successfully');
+        return $this->customResponse->createdResponse();
     }
 
     /**
@@ -73,6 +79,6 @@ class PrivateMangaGenreController extends Controller
     {
         $manga->privateGenres()->detach($genre->id);
 
-        return $this->jsonResponse(200, 'success', 'Deleted successfully');
+        return $this->customResponse->deletedResponse();
     }
 }

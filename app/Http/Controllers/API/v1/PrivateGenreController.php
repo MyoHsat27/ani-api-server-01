@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
-use App\CustomProvider\ResponseProvider;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PrivateGenre;
@@ -12,17 +11,23 @@ use App\Http\Resources\v1\PrivateGenreResource;
 use App\Http\Requests\API\v1\UpdatePrivateGenreRequest;
 use App\Models\User;
 use App\Http\Resources\v1\PrivateGenreCollection;
+use App\Http\Response\CustomResponse;
 
 class PrivateGenreController extends Controller
 {
-    use ResponseProvider;
+    protected CustomResponse $customResponse;
+
+    public function __construct(CustomResponse $customResponse)
+    {
+        $this->customResponse = $customResponse;
+    }
 
     /**
      * Display a listing of the resource.
      */
     public function index(User $user)
     {
-        return new PrivateGenreCollection($user->privateGenres);
+        return $this->customResponse->success(new PrivateGenreCollection($user->privateGenres));
     }
 
     /**
@@ -37,7 +42,7 @@ class PrivateGenreController extends Controller
             'user_id'     => Auth::id(),
         ]);
 
-        return $this->jsonResponse(201, "success", "Created successfully");
+        return $this->customResponse->createdResponse();
     }
 
     /**
@@ -45,13 +50,15 @@ class PrivateGenreController extends Controller
      */
     public function show(User $user, PrivateGenre $privateGenre)
     {
-        return $this->jsonResponse(200, "success", null, PrivateGenreResource::make($privateGenre));
+        return $this->customResponse->success(PrivateGenreResource::make($privateGenre));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(User $user, UpdatePrivateGenreRequest $request, PrivateGenre $privateGenre)
+    public function update(User $user,
+        UpdatePrivateGenreRequest $request,
+        PrivateGenre $privateGenre)
     {
         $privateGenre->update([
             'name'        => $request->name,
@@ -60,7 +67,7 @@ class PrivateGenreController extends Controller
             'user_id'     => Auth::id(),
         ]);
 
-        return $this->jsonResponse(200, "success", "Updated Successfully");
+        return $this->customResponse->updatedResponse();
     }
 
     /**
@@ -70,6 +77,6 @@ class PrivateGenreController extends Controller
     {
         $privateGenre->delete();
 
-        return $this->jsonResponse(200, "success", "Deleted Successfully");
+        return $this->customResponse->deletedResponse();
     }
 }

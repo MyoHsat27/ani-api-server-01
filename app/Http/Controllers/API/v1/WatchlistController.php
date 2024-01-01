@@ -10,19 +10,24 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\API\v1\UpdateWatchlistRequest;
 use App\Models\User;
 use App\Http\Resources\v1\WatchlistResource;
-use App\CustomProvider\ResponseProvider;
 use App\Http\Resources\v1\WatchlistCollection;
+use App\Http\Response\CustomResponse;
 
 class WatchlistController extends Controller
 {
-    use ResponseProvider;
+    protected CustomResponse $customResponse;
+
+    public function __construct(CustomResponse $customResponse)
+    {
+        $this->customResponse = $customResponse;
+    }
 
     /**
      * Display a listing of the resource.
      */
     public function index(User $user)
     {
-        return new WatchlistCollection($user->watchlists);
+        return $this->customResponse->success(new WatchlistCollection($user->watchlists));
     }
 
     /**
@@ -37,7 +42,7 @@ class WatchlistController extends Controller
             'user_id'     => Auth::id(),
         ]);
 
-        return $this->jsonResponse(201, 'success', 'Created successfully');
+        return $this->customResponse->createdResponse();
     }
 
     /**
@@ -45,7 +50,7 @@ class WatchlistController extends Controller
      */
     public function show(User $user, Watchlist $watchlist)
     {
-        return $this->jsonResponse(200, 'success', null, WatchlistResource::make($watchlist));
+        return $this->customResponse->success(WatchlistResource::make($watchlist));
     }
 
     /**
@@ -60,7 +65,7 @@ class WatchlistController extends Controller
             'user_id'     => Auth::id(),
         ]);
 
-        return $this->jsonResponse(200, 'success', 'Updated successfully');
+        return $this->customResponse->updatedResponse();
     }
 
     /**
@@ -70,6 +75,6 @@ class WatchlistController extends Controller
     {
         $watchlist->delete();
 
-        return $this->jsonResponse(200, 'success', 'Deleted successfully');
+        return $this->customResponse->deletedResponse();
     }
 }
