@@ -32,18 +32,19 @@ class Watchlist extends Model
         'created_at' => 'datetime',
     ];
 
-    public function privateAnimes():BelongsToMany
-    {
-        return $this->belongsToMany(PrivateAnime::class,'private_anime_watchlists');
-    }
-
-    public function user():BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function getRouteKeyName(): string
     {
         return 'slug';
     }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function privateAnimes(): BelongsToMany
+    {
+        return $this->belongsToMany(PrivateAnime::class, 'private_anime_watchlists');
+    }
+
 }

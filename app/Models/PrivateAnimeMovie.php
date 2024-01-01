@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PrivateAnimeMovie extends Model
-{use HasFactory;
+{
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -32,6 +33,11 @@ class PrivateAnimeMovie extends Model
         'created_at' => 'datetime',
     ];
 
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
     public function privateAnime(): BelongsTo
     {
         return $this->belongsTo(PrivateAnime::class);
@@ -42,8 +48,4 @@ class PrivateAnimeMovie extends Model
         return $this->belongsTo(ReleaseStatus::class);
     }
 
-    public function getRouteKeyName()
-    {
-        return 'slug';
-    }
 }

@@ -33,22 +33,22 @@ class PrivateAnimeWatchStatus extends Model
         'created_at' => 'datetime',
     ];
 
-    public function privateAnime():BelongsTo
-    {
-        return $this->belongsTo(PrivateAnime::class);
-    }
-
-    public function watchStatus():BelongsTo
-    {
-        return $this->belongsTo(WatchStatus::class);
-    }
-
-    public function user():BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function favouriteLevel():BelongsTo
+    public function privateAnime(): BelongsTo
+    {
+        return $this->belongsTo(PrivateAnime::class);
+    }
+
+    public function watchStatus(): BelongsTo
+    {
+        return $this->belongsTo(WatchStatus::class);
+    }
+
+    public function favouriteLevel(): BelongsTo
     {
         return $this->belongsTo(FavouriteLevel::class);
     }

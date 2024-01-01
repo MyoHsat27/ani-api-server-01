@@ -28,8 +28,13 @@ class FavouriteLevel extends Model
         'created_at' => 'datetime',
     ];
 
-    public function privateAnimeWatchStatuses():HasMany
+    public function privateAnimeWatchStatuses(): HasMany
     {
-        return $this->hasMany(PrivateAnimeWatchStatus::class);
+        return $this->hasMany(PrivateAnimeWatchStatus::class, 'private_anime_watch_statuses');
+    }
+
+    public function privateMangaReadStatuses(): HasMany
+    {
+        return $this->hasMany(PrivateMangaReadStatus::class, 'private_manga_read_statuses');
     }
 }

@@ -15,20 +15,16 @@ class PrivateAnimeWatchlist extends Model
     protected $fillable = [
         'watchlist_id',
         'private_anime_id',
-        'watch_status_id'
     ];
-    public function watchlist():BelongsTo
+
+    public function watchlist(): BelongsTo
     {
         return $this->belongsTo(Watchlist::class);
     }
 
-    public function privateAnime():BelongsTo
+    public function privateAnime(): BelongsTo
     {
         return $this->belongsTo(PrivateAnime::class);
     }
 
-    public function watchStatus():BelongsTo
-    {
-        return $this->belongsTo(WatchStatus::class);
-    }
 }

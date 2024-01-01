@@ -28,13 +28,13 @@ class WatchStatus extends Model
         'created_at' => 'datetime',
     ];
 
-    public function privateAnimeWatchlists():HasMany
+    public function privateAnimeWatchStatuses(): HasMany
     {
-        return $this->hasMany(PrivateAnimeWatchlist::class);
+        return $this->hasMany(PrivateAnimeWatchStatus::class, 'private_anime_watch_statuses');
     }
 
-    public function privateAnimeWatchStatuses():HasMany
+    public function privateMangaReadStatuses(): HasMany
     {
-        return $this->hasMany(PrivateAnimeWatchStatus::class);
+        return $this->hasMany(PrivateMangaReadStatus::class, 'private_manga_read_statuses');
     }
 }

@@ -32,6 +32,11 @@ class PrivateAnimeSeason extends Model
         'created_at' => 'datetime',
     ];
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function privateAnime(): BelongsTo
     {
         return $this->belongsTo(PrivateAnime::class);
@@ -40,11 +45,6 @@ class PrivateAnimeSeason extends Model
     public function releaseStatus(): BelongsTo
     {
         return $this->belongsTo(ReleaseStatus::class);
-    }
-
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
     }
 
 }
