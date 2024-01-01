@@ -25,7 +25,7 @@ class PrivateMangaResource extends JsonResource
             'image_url'      => $this->image_url,
             'release_status' => $this->releaseStatus->status,
             'manga_type'     => $this->mangaType->type,
-            'genres'         => PrivateGenreResource::collection($this->privateGenres),
+            'genres'         => $this->privateGenres->pluck('name'),
             'createdBy'      => $this->user->username,
         ];
     }
