@@ -4,6 +4,8 @@ namespace App\Http\Requests\API\v1;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class StoreWatchlistRequest extends FormRequest
 {
@@ -23,7 +25,16 @@ class StoreWatchlistRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name'        => [
+                'required',
+                'string',
+                'max:50',
+                'min:3',
+                Rule::unique('watchlists')->where(function ($query) {
+                    return $query->where('user_id', Auth::id());
+                }),
+            ],
+            'description' => 'required|max:500|string',
         ];
     }
 }
