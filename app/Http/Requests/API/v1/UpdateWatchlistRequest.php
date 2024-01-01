@@ -4,6 +4,8 @@ namespace App\Http\Requests\API\v1;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateWatchlistRequest extends FormRequest
 {
@@ -22,8 +24,18 @@ class UpdateWatchlistRequest extends FormRequest
      */
     public function rules(): array
     {
+        $currentWatchlist = $this->route('watchlist')->id;
+
         return [
-            //
+            'name'              => [
+                'string',
+                'max:50',
+                'min:3',
+                Rule::unique('watchlists')->where(function ($query) {
+                    return $query->where('user_id', Auth::id());
+                })->ignore($currentWatchlist),
+            ],
+            'description'       => 'sometimes|max:1000|string',
         ];
     }
 }
