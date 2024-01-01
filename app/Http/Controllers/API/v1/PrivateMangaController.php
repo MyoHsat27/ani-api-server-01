@@ -18,10 +18,6 @@ use App\Http\Response\CustomResponse;
 class PrivateMangaController extends Controller
 {
 
-    /**
-     * @var FilterRepository
-     */
-    protected FilterRepository $filterRepository;
     protected PrivateMangaGenreController $privateMangaGenreController;
     protected CustomResponse $customResponse;
 
@@ -30,21 +26,21 @@ class PrivateMangaController extends Controller
      */
     public function __construct(
         CustomResponse $customResponse,
-        FilterRepository $filterRepository,
         PrivateMangaGenreController $privateMangaGenreController)
     {
         $this->customResponse = $customResponse;
-        $this->filterRepository = $filterRepository;
         $this->privateMangaGenreController = $privateMangaGenreController;
     }
 
     /**
      * Display a listing of the resource.
      */
-    public function index(PrivateMangaFilterRequest $request, User $user)
+    public function index(FilterRepository $filterRepository,
+        PrivateMangaFilterRequest $request,
+        User $user)
     {
         // Get the initial builder with search filtering
-        $query = $this->filterRepository->filterBySearchKeyword($user,
+        $query = $filterRepository->filterBySearchKeyword($user,
             PrivateManga::class,
             'privateMangas',
             $request->input('search')
@@ -52,14 +48,15 @@ class PrivateMangaController extends Controller
 
         // Apply Additional filters
         $filters = [
-            "filterByMangaType"     => $request->input('manga-type'),
-            "filterByReleaseStatus" => $request->input('status'),
-            "filterByChapterFrom"   => $request->input('chapter-from'),
-            "filterByChapterTo"     => $request->input('chapter-to'),
+            'chapterFrom'   => $request->input('chapter-from'),
+            'chapterTo'     => $request->input('chapter-to'),
+            'mangaType'     => $request->input('manga-type'),
+            'releaseStatus' => $request->input('release-status'),
         ];
 
-        $this->filterRepository->applyFilters($query, $filters);
-        $privateMangas = $this->filterRepository->paginate($query);
+        $filteredResult = $filterRepository->applyFilters($query, $filters);
+
+        $privateMangas = $filterRepository->paginate($filteredResult, $request);
 
         return $this->customResponse->success(new PrivateMangaCollection($privateMangas));
     }

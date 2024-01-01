@@ -6,26 +6,27 @@ use Illuminate\Database\Eloquent\Builder;
 use Laravel\Scout\Builder as ScoutBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Collection;
+use App\Repositories\Filters\FilterFactory;
 
 class FilterRepository
 {
-    /**
-     * Apply filters to the query.
-     *
-     * @param  Builder  $query
-     * @param  array    $filters
-     *
-     * @return Builder
-     */
     public function applyFilters(Builder $query, array $filters): Builder
     {
         foreach ($filters as $filter => $value) {
-            if (method_exists($this, $filter) && !is_null($value)) {
-                $this->$filter($query, $value);
+            if ($this->filterSupported($filter) && !is_null($value)) {
+                $filterInstance = FilterFactory::create($filter);
+                $filterInstance->apply($query, $value);
             }
         }
 
         return $query;
+    }
+
+    private function filterSupported(string $filter): bool
+    {
+        return in_array($filter, ['searchKeyword', 'chapterFrom', 'releaseStatus', 'mangaType']);
     }
 
     /**
@@ -65,83 +66,21 @@ class FilterRepository
     }
 
     /**
-     * Filter by chapter from.
-     *
-     * @param  Builder  $query
-     * @param  int      $chapterFrom
-     *
-     * @return Builder
-     */
-    public function filterByChapterFrom(Builder $query,
-        int $chapterFrom): Builder
-    {
-        return $query->when($chapterFrom, function (Builder $query) use ($chapterFrom) {
-            return $query->where('chapter', '>=', $chapterFrom);
-        });
-    }
-
-    /**
-     * Filter by chapter to.
-     *
-     * @param  Builder  $query
-     * @param  int      $chapterTo
-     *
-     * @return Builder
-     */
-    public function filterByChapterTo(Builder $query,
-        int $chapterTo): Builder
-    {
-        return $query->when($chapterTo, function (Builder $query) use ($chapterTo) {
-            return $query->where('chapter', '<=', $chapterTo);
-        });
-    }
-
-    /**
-     * Filter by status.
-     *
-     * @param  Builder  $query
-     * @param  string   $status
-     *
-     * @return Builder
-     */
-    public function filterByReleaseStatus(Builder $query,
-        string $status): Builder
-    {
-        return $query->when($status, function (Builder $query) use ($status) {
-            return $query->whereHas('releaseStatus', function (Builder $subQuery) use ($status) {
-                return $subQuery->where('status', $status);
-            });
-        });
-    }
-
-    /**
-     * Filter by manga type.
-     *
-     * @param  Builder  $query
-     * @param  string   $mangaType
-     *
-     * @return Builder
-     */
-    public function filterByMangaType(Builder $query,
-        string $mangaType): Builder
-    {
-        return $query->when($mangaType, function (Builder $query) use ($mangaType) {
-            return $query->whereHas('mangaType', function (Builder $subQuery) use ($mangaType) {
-                return $subQuery->where('type', $mangaType);
-            });
-        });
-    }
-
-    /**
      * Paginate the query.
      *
      * @param  Builder  $query
+     * @param  Request  $request
      * @param  int      $perPage
      *
-     * @return LengthAwarePaginator
+     * @return LengthAwarePaginator|Collection
      */
-    public function paginate(Builder $query, int $perPage = 10)
+    public function paginate(Builder $query,
+        Request $request,
+        int $perPage = 10): LengthAwarePaginator|Collection
     {
-        return $query->paginate($perPage);
+        $page = $request->input('page');
+        $limit = $request->input('limit', $perPage);
+
+        return $page ? $query->paginate($limit) : $query->get();
     }
 }
