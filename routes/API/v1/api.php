@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\v1\AuthControllerV1;
 use App\Http\Controllers\API\v1\PrivateGenreController;
+use App\Http\Controllers\API\v1\PrivateMangaController;
 
 
 // Authenticated Routes
@@ -10,7 +11,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Routes for managing resources related to a single user
     Route::prefix('users/{user}')->scopeBindings()->group(function () {
-//        Route::apiResource('mangas', MangaController::class);
+        Route::apiResource('private-mangas',
+            PrivateMangaController::class
+        );
         //        Route::apiResource('animes', AnimeController::class);
         //        Route::apiResource('watchlists', WatchlistController::class)->except('update');
         //        Route::apiResource('favourites', FavouriteController::class)

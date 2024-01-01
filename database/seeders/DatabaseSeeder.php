@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
         $releaseStatusTypes = ['on-going', 'coming-soon', 'finished', 'dropped', 'hiatus'];
         foreach ($releaseStatusTypes as $type) {
             ReleaseStatus::factory()->create([
-                'type' => $type,
+                'status' => $type,
             ]);
         }
 

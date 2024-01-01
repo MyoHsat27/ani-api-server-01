@@ -104,12 +104,12 @@ class FilterRepository
      *
      * @return Builder
      */
-    public function filterByStatus(Builder $query,
+    public function filterByReleaseStatus(Builder $query,
         string $status): Builder
     {
         return $query->when($status, function (Builder $query) use ($status) {
-            return $query->whereHas('status', function (Builder $subQuery) use ($status) {
-                return $subQuery->where('slug', $status);
+            return $query->whereHas('releaseStatus', function (Builder $subQuery) use ($status) {
+                return $subQuery->where('status', $status);
             });
         });
     }
@@ -127,7 +127,7 @@ class FilterRepository
     {
         return $query->when($mangaType, function (Builder $query) use ($mangaType) {
             return $query->whereHas('mangaType', function (Builder $subQuery) use ($mangaType) {
-                return $subQuery->where('slug', $mangaType);
+                return $subQuery->where('type', $mangaType);
             });
         });
     }

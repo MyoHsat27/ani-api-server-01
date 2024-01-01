@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('release_statuses', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['on-going', 'coming-soon', 'finished', 'dropped', 'hiatus']);
+            $table->enum('status', ['on-going', 'coming-soon', 'finished', 'dropped', 'hiatus']);
             $table->timestamps();
         });
     }
