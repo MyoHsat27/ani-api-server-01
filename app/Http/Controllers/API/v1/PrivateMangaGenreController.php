@@ -6,9 +6,24 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PrivateManga;
 use App\Models\PrivateGenre;
+use App\Models\User;
+use App\Models\Manga;
+use App\Http\Resources\v1\GenreResource;
+use App\CustomProvider\ResponseProvider;
+use App\Http\Resources\v1\PrivateGenreResource;
 
 class PrivateMangaGenreController extends Controller
 {
+    use ResponseProvider;
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(User $user, PrivateManga $privateManga)
+    {
+        return PrivateGenreResource::collection($privateManga->privateGenres);
+    }
+
     /**
      * Store multiple genres in a manga.
      */
@@ -16,6 +31,8 @@ class PrivateMangaGenreController extends Controller
     {
         $genres = $request->input('genres', []);
         $manga->privateGenres()->attach($genres);
+
+        return response()->json(['message' => 'Genres added successfully'], 201);
     }
 
     /**
@@ -27,6 +44,8 @@ class PrivateMangaGenreController extends Controller
 
         $updatedGenres = $request->input('genres', []);
         $manga->privateGenres()->attach($updatedGenres);
+
+        return $this->jsonResponse(200, 'success', 'Genres updated successfully');
     }
 
     /**
@@ -35,6 +54,8 @@ class PrivateMangaGenreController extends Controller
     public function destroyMultiple(PrivateManga $manga)
     {
         $manga->privateGenres()->detach();
+
+        return $this->jsonResponse(200, 'success', 'Genres removed successfully');
     }
 
     /**
