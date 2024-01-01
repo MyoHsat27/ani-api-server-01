@@ -45,7 +45,7 @@ class PrivateAnimeController extends Controller
 
      // Apply Additional filters
      $filters = [
-         "filterByStatus" => $request->input('status'),
+         'releaseStatus' => $request->input('release-status'),
      ];
      $filteredResult = $filterRepository->applyFilters($query, $filters);
      $privateAnimes = $filterRepository->paginate($filteredResult,$request);
