@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class WatchStatus extends Model
 {
@@ -15,7 +16,7 @@ class WatchStatus extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'type',
+        'status',
     ];
 
     /**
@@ -26,4 +27,14 @@ class WatchStatus extends Model
     protected $casts = [
         'created_at' => 'datetime',
     ];
+
+    public function privateAnimeWatchlists():HasMany
+    {
+        return $this->hasMany(PrivateAnimeWatchlist::class);
+    }
+
+    public function privateAnimeWatchStatuses():HasMany
+    {
+        return $this->hasMany(PrivateAnimeWatchStatus::class);
+    }
 }

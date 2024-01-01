@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PrivateAnimeSeason extends Model
 {
@@ -30,6 +31,16 @@ class PrivateAnimeSeason extends Model
     protected $casts = [
         'created_at' => 'datetime',
     ];
+
+    public function privateAnime(): BelongsTo
+    {
+        return $this->belongsTo(PrivateAnime::class);
+    }
+
+    public function releaseStatus(): BelongsTo
+    {
+        return $this->belongsTo(ReleaseStatus::class);
+    }
 
     public function getRouteKeyName(): string
     {

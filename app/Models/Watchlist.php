@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Watchlist extends Model
 {
@@ -29,6 +31,16 @@ class Watchlist extends Model
     protected $casts = [
         'created_at' => 'datetime',
     ];
+
+    public function privateAnimes():BelongsToMany
+    {
+        return $this->belongsToMany(PrivateAnime::class,'private_anime_watchlists');
+    }
+
+    public function user():BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function getRouteKeyName(): string
     {
