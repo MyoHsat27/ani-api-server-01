@@ -9,12 +9,17 @@ use Illuminate\Http\Request;
 use App\Http\Resources\v1\UserResource;
 use App\Http\Requests\API\v1\LoginUserRequest;
 use Illuminate\Support\Facades\Auth;
-use App\CustomProvider\ResponseProvider;
 use Illuminate\Support\Str;
+use App\Http\Response\CustomResponse;
 
 class AuthControllerV1
 {
-    use ResponseProvider;
+    protected CustomResponse $customResponse;
+
+    public function __construct(CustomResponse $customResponse)
+    {
+        $this->customResponse = $customResponse;
+    }
 
     /**
      * Login a user and generate access token.
@@ -28,7 +33,7 @@ class AuthControllerV1
         $credentials = $request->only(['email', 'password']);
 
         if (!Auth::attempt($credentials)) {
-            return $this->jsonResponse(401, 'error', 'Incorrect Username or Password');
+            return $this->customResponse->error('Incorrect Username or Password', 401);
         }
 
         $user = User::where('email', $request->email)->first();
@@ -41,7 +46,7 @@ class AuthControllerV1
             'token_type'   => 'Bearer',
         ];
 
-        return $this->jsonResponse(201, 'success', 'User Logged In Successfully', $data);
+        return $this->customResponse->success($data);
     }
 
     /**
@@ -54,16 +59,13 @@ class AuthControllerV1
     public function register(StoreUserRequest $request): JsonResponse
     {
         User::create([
-            'username'     => $request->username,
+            'username' => $request->username,
             'slug'     => Str::slug($request->username),
             'email'    => $request->email,
             'password' => $request->password,
         ]);
 
-        return $this->jsonResponse(201,
-            'success',
-            'User Created Successfully'
-        );
+        return $this->customResponse->createdResponse('User Created Successfully');
     }
 
     /**
@@ -77,6 +79,6 @@ class AuthControllerV1
     {
         $request->user()->currentAccessToken()->delete();
 
-        return $this->jsonResponse(204);
+        return $this->customResponse->success(null, 204);
     }
 }

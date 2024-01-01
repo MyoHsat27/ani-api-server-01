@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\FilterRepository;
-use App\CustomProvider\ResponseProvider;
 use App\Models\User;
 use App\Http\Requests\API\v1\PrivateMangaFilterRequest;
 use App\Models\PrivateManga;
@@ -14,24 +13,27 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\API\v1\StorePrivateMangaRequest;
 use App\Http\Resources\v1\PrivateMangaResource;
 use App\Http\Requests\API\v1\UpdatePrivateMangaRequest;
+use App\Http\Response\CustomResponse;
 
 class PrivateMangaController extends Controller
 {
-
-    use ResponseProvider;
 
     /**
      * @var FilterRepository
      */
     protected FilterRepository $filterRepository;
     protected PrivateMangaGenreController $privateMangaGenreController;
+    protected CustomResponse $customResponse;
 
     /**
      * PrivateMangaController constructor
      */
-    public function __construct(FilterRepository $filterRepository,
+    public function __construct(
+        CustomResponse $customResponse,
+        FilterRepository $filterRepository,
         PrivateMangaGenreController $privateMangaGenreController)
     {
+        $this->customResponse = $customResponse;
         $this->filterRepository = $filterRepository;
         $this->privateMangaGenreController = $privateMangaGenreController;
     }
@@ -59,7 +61,7 @@ class PrivateMangaController extends Controller
         $this->filterRepository->applyFilters($query, $filters);
         $privateMangas = $this->filterRepository->paginate($query);
 
-        return new PrivateMangaCollection($privateMangas);
+        return $this->customResponse->success(new PrivateMangaCollection($privateMangas));
     }
 
     /**
@@ -81,7 +83,7 @@ class PrivateMangaController extends Controller
         ]);
         $this->privateMangaGenreController->storeMultiple($request, $privateManga);
 
-        return $this->jsonResponse(201, "success", "Created Successfully");
+        return $this->customResponse->createdResponse();
     }
 
     /**
@@ -89,7 +91,8 @@ class PrivateMangaController extends Controller
      */
     public function show(User $user, PrivateManga $privateManga)
     {
-        return $this->jsonResponse(200, "success", null, PrivateMangaResource::make($privateManga));
+
+        return $this->customResponse->success(PrivateMangaResource::make($privateManga));
     }
 
     /**
@@ -114,7 +117,7 @@ class PrivateMangaController extends Controller
 
         $this->privateMangaGenreController->updateMultiple($request, $privateManga);
 
-        return $this->jsonResponse(200, "success", "Updated Successfully");
+        return $this->customResponse->updatedResponse();
     }
 
     /**
@@ -125,7 +128,7 @@ class PrivateMangaController extends Controller
         $this->privateMangaGenreController->destroyMultiple($privateManga);
         $privateManga->delete();
 
-        return $this->jsonResponse(200, "success", "Deleted Successfully");
+        return $this->customResponse->deletedResponse();
     }
 
 }
