@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\API\v1\StoreWatchlistRequest;
+use App\Models\Watchlist;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
-use App\Models\PrivateGenre;
-use App\Http\Requests\API\v1\StorePrivateGenreRequest;
-use App\Http\Resources\v1\PrivateGenreResource;
-use App\Http\Requests\API\v1\UpdatePrivateGenreRequest;
+use App\Http\Requests\API\v1\UpdateWatchlistRequest;
 use App\Models\User;
-use App\Http\Resources\v1\PrivateGenreCollection;
+use App\Http\Resources\v1\WatchlistResource;
+use App\Http\Resources\v1\WatchlistCollection;
 use App\Http\Response\CustomResponse;
 
-class PrivateGenreController extends Controller
+class WatchlistController extends Controller
 {
     protected CustomResponse $customResponse;
 
@@ -27,15 +27,15 @@ class PrivateGenreController extends Controller
      */
     public function index(User $user)
     {
-        return $this->customResponse->success(new PrivateGenreCollection($user->privateGenres));
+        return $this->customResponse->success(new WatchlistCollection($user->watchlists));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(User $user, StorePrivateGenreRequest $request)
+    public function store(StoreWatchlistRequest $request)
     {
-        PrivateGenre::create([
+        Watchlist::create([
             'name'        => $request->name,
             'slug'        => Str::slug($request->name),
             'description' => $request->description,
@@ -48,19 +48,17 @@ class PrivateGenreController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user, PrivateGenre $privateGenre)
+    public function show(User $user, Watchlist $watchlist)
     {
-        return $this->customResponse->success(PrivateGenreResource::make($privateGenre));
+        return $this->customResponse->success(WatchlistResource::make($watchlist));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(User $user,
-        UpdatePrivateGenreRequest $request,
-        PrivateGenre $privateGenre)
+    public function update(UpdateWatchlistRequest $request, User $user, Watchlist $watchlist)
     {
-        $privateGenre->update([
+        $watchlist->update([
             'name'        => $request->name,
             'slug'        => Str::slug($request->name),
             'description' => $request->description,
@@ -73,9 +71,9 @@ class PrivateGenreController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user, PrivateGenre $privateGenre)
+    public function destroy(User $user, Watchlist $watchlist)
     {
-        $privateGenre->delete();
+        $watchlist->delete();
 
         return $this->customResponse->deletedResponse();
     }
