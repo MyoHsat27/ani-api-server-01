@@ -42,7 +42,7 @@ class PrivateGenre extends Model
 
     public function private_mangas(): BelongsToMany
     {
-        return $this->belongsToMany(PrivateGenre::class, 'private_manga_genres');
+        return $this->belongsToMany(PrivateManga::class, 'private_manga_genres');
     }
 
 }

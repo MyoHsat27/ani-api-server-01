@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -40,6 +41,36 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+        'password'          => 'hashed',
     ];
+
+    public function readlists(): HasMany
+    {
+        return $this->hasMany(Readlist::class);
+    }
+
+    public function watchlists(): HasMany
+    {
+        return $this->hasMany(Watchlist::class);
+    }
+
+    public function privateMangas(): HasMany
+    {
+        return $this->hasMany(PrivateManga::class);
+    }
+
+    public function privateAnimes(): HasMany
+    {
+        return $this->hasMany(PrivateAnime::class);
+    }
+
+    public function privateGenres(): HasMany
+    {
+        return $this->hasMany(PrivateGenre::class);
+    }
+
+    public function privateMangaReadStatuses(): HasMany
+    {
+        return $this->hasMany(PrivateMangaReadStatus::class);
+    }
 }

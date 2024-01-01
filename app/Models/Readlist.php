@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Readlist extends Model
 {
@@ -34,4 +36,17 @@ class Readlist extends Model
     {
         return 'slug';
     }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function privateMangas(): BelongsToMany
+    {
+        return $this->belongsToMany(PrivateManga::class,
+            'private_manga_readlists'
+        );
+    }
+
 }
