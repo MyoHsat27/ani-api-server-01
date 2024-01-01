@@ -9,6 +9,7 @@ use App\Http\Requests\API\v1\StorePrivateAnimeRequest;
 use App\Http\Requests\API\v1\UpdatePrivateAnimeRequest;
 use App\Http\Resources\v1\PrivateAnimeCollection;
 use App\Http\Resources\v1\PrivateAnimeResource;
+use App\Http\Response\CustomResponse;
 use App\Models\PrivateAnime;
 use Illuminate\Support\Str;
 use App\Models\User;
@@ -18,20 +19,21 @@ use Illuminate\Support\Facades\Auth;
 
 class PrivateAnimeController extends Controller
 {
-    use ResponseProvider;
 
     /**
      * @var FilterRepository
      */
     protected FilterRepository $filterRepository;
     protected PrivateAnimeGenreController $privateAnimeGenreController;
-
+    protected CustomResponse $customResponse;
     /**
      * PrivateMangaController constructor
      */
-    public function __construct(FilterRepository $filterRepository,
+    public function __construct( CustomResponse $customResponse,
+        FilterRepository $filterRepository,
         PrivateAnimeGenreController $privateAnimeGenreController)
     {
+        $this->customResponse = $customResponse;
         $this->filterRepository = $filterRepository;
         $this->privateAnimeGenreController = $privateAnimeGenreController;
     }
@@ -52,9 +54,9 @@ class PrivateAnimeController extends Controller
          "filterByStatus" => $request->input('status'),
      ];
      $this->filterRepository->applyFilters($query, $filters);
-     $animes = $this->filterRepository->paginate($query);
+     $privateAnimes = $this->filterRepository->paginate($query);
 
-     return new PrivateAnimeCollection($animes);
+     return $this->customResponse->success(new PrivateAnimeCollection($privateAnimes));
     }
 
     /**
@@ -74,7 +76,7 @@ class PrivateAnimeController extends Controller
         ]);
         $this->privateAnimeGenreController->storeMultiple($request, $privateAnime);
 
-        return $this->jsonResponse(201, "success", "Created Successfully");
+        return $this->customResponse->createdResponse();
     }
 
     /**
@@ -82,7 +84,7 @@ class PrivateAnimeController extends Controller
      */
     public function show(User $user, PrivateAnime $privateAnime)
     {
-        return $this->jsonResponse(200, "success", null, PrivateAnimeResource::make($privateAnime));
+        return $this->customResponse->success(PrivateAnimeResource::make($privateAnime));
     }
 
 
@@ -104,9 +106,9 @@ class PrivateAnimeController extends Controller
         'user_id'           => Auth::id(),
     ]);
 
-    $this->privateAnimeGenreController->updateMultiple($request, $privateAnime);
+   return $this->customResponse->updatedResponse();
 
-    return $this->jsonResponse(200, "success", "Updated Successfully");
+
 }
 
     /**
@@ -117,6 +119,6 @@ class PrivateAnimeController extends Controller
         $this->privateAnimeGenreController->destroyMultiple($privateAnime);
         $privateAnime->delete();
 
-        return $this->jsonResponse(200, "success", "Deleted Successfully");
+        return $this->customResponse->deletedResponse();
     }
 }
