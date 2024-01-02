@@ -7,6 +7,8 @@ use App\Http\Controllers\API\v1\PrivateGenreController;
 use App\Http\Controllers\API\v1\PrivateMangaController;
 use App\Http\Controllers\API\v1\WatchlistController;
 use App\Http\Controllers\API\v1\ReadlistController;
+use App\Http\Controllers\API\v1\PrivateAnimeWatchlistController;
+use App\Http\Controllers\API\v1\PrivateMangaReadlistController;
 
 
 // Authenticated Routes
@@ -35,6 +37,26 @@ Route::middleware(['auth:sanctum'])->group(function () {
         //        Route::prefix('mangas/{manga}')->scopeBindings()->group(function () {
         //            Route::apiResource('genres',MangaSingleGenreController::class)->except(['update','show']);
         //        });
+
+        //Route for managing resources related to a specific readlist
+        Route::prefix('readlists/{readlist}')->scopeBindings()->group(function () {
+            Route::apiResource('mangas', PrivateMangaReadlistController::class)->only([
+                'index',
+                'store',
+                'destroy',
+            ]);
+        });
+
+        //Route for managing resources related to a specific watchlist
+        Route::prefix('watchlists/{watchlist}')->scopeBindings()->group(function () {
+            Route::apiResource('animes', PrivateAnimeWatchlistController::class)->only([
+                'index',
+                'store',
+                'destroy',
+            ]);
+        });
+
+
     });
 
     // Authentication-related Routes

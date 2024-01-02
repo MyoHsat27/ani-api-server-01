@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API\v1;
 
-use App\CustomProvider\ResponseProvider;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\v1\PrivateAnimeFilterRequest;
 use App\Http\Requests\API\v1\StorePrivateAnimeRequest;

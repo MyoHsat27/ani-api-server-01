@@ -38,7 +38,7 @@ class StorePrivateAnimeRequest extends FormRequest
             'resource_url'      => 'nullable|url',
             'image_url'         => 'nullable|url',
             'release_status_id' => 'required|exists:release_statuses,id',
-            'genres'            => 'required|exists:private_genres,id',
+            'genres'            => 'required|exists:private_genres,id|array',
         ];
     }
 
