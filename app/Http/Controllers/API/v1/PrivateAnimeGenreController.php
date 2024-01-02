@@ -45,7 +45,7 @@ class PrivateAnimeGenreController extends Controller
     {
         $anime->privateGenres()->detach();
 
-        $updatedGenres = $request->input('genres', []);
+        $updatedGenres = array_unique($request->input('genres', []));
         $anime->privateGenres()->attach($updatedGenres);
 
         return $this->customResponse->updatedResponse();
