@@ -28,7 +28,6 @@ class StorePrivateMangaReadlistRequest extends FormRequest
         return [
             'manga_id' => [
                 'required',
-                'exists:private_mangas,id',
                 Rule::exists('private_mangas', 'id')->where(function ($query) {
                     $query->where('user_id', auth()->id());
                 }),

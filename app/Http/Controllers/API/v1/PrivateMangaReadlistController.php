@@ -8,6 +8,9 @@ use App\Models\Readlist;
 use App\Models\PrivateManga;
 use App\Models\User;
 use App\Http\Response\CustomResponse;
+use Illuminate\Http\Request;
+use App\Http\Resources\v1\ReadlistResource;
+use App\Http\Resources\v1\PrivateMangaReadlistCollection;
 
 class PrivateMangaReadlistController extends Controller
 {
@@ -21,9 +24,15 @@ class PrivateMangaReadlistController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(User $user, Readlist $readlist)
+    public function index(User $user, Readlist $readlist, Request $request)
     {
-        //
+        $readlist->load('privateMangas');
+        $paginatedReadlistMangas = $readlist->privateMangas()->paginate(10);
+
+        return $this->customResponse->success([
+            'readlist' => new ReadlistResource($readlist),
+            'mangas'   => new PrivateMangaReadlistCollection($paginatedReadlistMangas),
+        ]);
     }
 
     /**

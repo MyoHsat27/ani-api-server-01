@@ -49,7 +49,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         //Route for managing resources related to a specific watchlist
         Route::prefix('watchlists/{watchlist}')->scopeBindings()->group(function () {
-            Route::apiResource('animes', PrivateAnimeWatchlistController::class)->only([
+            Route::apiResource('private-animes', PrivateAnimeWatchlistController::class)->only([
                 'index',
                 'store',
                 'destroy',

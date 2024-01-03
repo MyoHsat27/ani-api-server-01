@@ -8,6 +8,8 @@ use App\Models\PrivateAnime;
 use App\Models\User;
 use App\Http\Response\CustomResponse;
 use App\Http\Requests\API\v1\StorePrivateAnimeWatchlistRequest;
+use App\Http\Resources\v1\PrivateAnimeWatchlistCollection;
+use App\Http\Resources\v1\WatchlistResource;
 
 class PrivateAnimeWatchlistController extends Controller
 {
@@ -23,7 +25,13 @@ class PrivateAnimeWatchlistController extends Controller
      */
     public function index(User $user, Watchlist $watchlist)
     {
-        //
+        $watchlist->load('privateAnimes');
+        $paginatedWatchlistAnimes = $watchlist->privateAnimes()->paginate(10);
+
+        return $this->customResponse->success([
+            'watchlist' => new WatchlistResource($watchlist),
+            'animes'   => new PrivateAnimeWatchlistCollection($paginatedWatchlistAnimes),
+        ]);
     }
 
     /**

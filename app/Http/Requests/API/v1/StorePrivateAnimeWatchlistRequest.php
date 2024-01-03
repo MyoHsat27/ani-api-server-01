@@ -28,7 +28,6 @@ class StorePrivateAnimeWatchlistRequest extends FormRequest
         return [
             'anime_id' => [
                 'required',
-                'exists:private_animes,id',
                 Rule::exists('private_animes', 'id')->where(function ($query) {
                     $query->where('user_id', auth()->id());
                 }),
