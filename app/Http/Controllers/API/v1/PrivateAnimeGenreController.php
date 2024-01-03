@@ -32,7 +32,7 @@ class PrivateAnimeGenreController extends Controller
      */
     public function storeMultiple(Request $request, PrivateAnime $anime)
     {
-        $genres = $request->input('genres', []);
+        $genres = array_unique($request->input('genres', []));
         $anime->privateGenres()->attach($genres);
 
         return $this->customResponse->createdResponse();
@@ -45,7 +45,7 @@ class PrivateAnimeGenreController extends Controller
     {
         $anime->privateGenres()->detach();
 
-        $updatedGenres = $request->input('genres', []);
+        $updatedGenres = array_unique($request->input('genres', []));
         $anime->privateGenres()->attach($updatedGenres);
 
         return $this->customResponse->updatedResponse();
