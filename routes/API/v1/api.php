@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\v1\AuthControllerV1;
 use App\Http\Controllers\API\v1\PrivateAnimeController;
+use App\Http\Controllers\API\v1\PrivateAnimeSeasonController;
 use App\Http\Controllers\API\v1\PrivateGenreController;
 use App\Http\Controllers\API\v1\PrivateMangaController;
 use App\Http\Controllers\API\v1\WatchlistController;
@@ -24,12 +25,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
         //            ->except('update');
 
         // Routes for managing resources related to a specific anime
-        //        Route::prefix('animes/{anime}')->scopeBindings()->group(function () {
-        //            Route::apiResource('seasons', SeasonController::class);
-        //            Route::apiResource('movies', MovieController::class);
-        //            Route::apiResource('playlists', PlaylistController::class);
-        //            Route::apiResource('genres',AnimeSingleGenreController::class)->except(['update','show']);
-        //        });
+               Route::prefix('private-animes/{private_anime}')->scopeBindings()->group(function () {
+                    Route::apiResource('private-anime-seasons',PrivateAnimeSeasonController::class);
+                //    Route::apiResource('movies', MovieController::class);
+                //    Route::apiResource('playlists', PlaylistController::class);
+                //    Route::apiResource('genres',AnimeSingleGenreController::class)->except(['update','show']);
+               });
 
         //Route for managing resources related to a specific manga
         //        Route::prefix('mangas/{manga}')->scopeBindings()->group(function () {
