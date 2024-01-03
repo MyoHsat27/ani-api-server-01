@@ -3,18 +3,18 @@
 namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\API\v1\StorePrivateAnimeSeasonRequest;
-use App\Http\Requests\API\v1\UpdatePrivateAnimeSeasonRequest;
-use App\Http\Resources\v1\PrivateAnimeSeasonCollection;
-use App\Http\Resources\v1\PrivateAnimeSeasonResource;
+use App\Http\Requests\API\v1\StorePrivateAnimeMovieRequest;
+use App\Http\Requests\API\v1\UpdatePrivateAnimeMovieRequest;
+use App\Http\Resources\v1\PrivateAnimeMovieCollection;
+use App\Http\Resources\v1\PrivateAnimeMovieResource;
 use App\Http\Response\CustomResponse;
 use App\Models\PrivateAnime;
-use App\Models\PrivateAnimeSeason;
+use App\Models\PrivateAnimeMovie;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
-class PrivateAnimeSeasonController extends Controller
+class PrivateAnimeMovieController extends Controller
 {
     protected CustomResponse $customResponse;
 
@@ -25,19 +25,19 @@ class PrivateAnimeSeasonController extends Controller
 
     public function index(User $user, PrivateAnime $privateAnime)
     {
-        return $this->customResponse->success(new PrivateAnimeSeasonCollection($privateAnime->privateAnimeSeasons));
+        return $this->customResponse->success(new PrivateAnimeMovieCollection($privateAnime->privateAnimeMovies));
     }
 
-    /**
+     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePrivateAnimeSeasonRequest $request,User $user,PrivateAnime $privateAnime)
+    public function store(StorePrivateAnimeMovieRequest $request,User $user,PrivateAnime $privateAnime)
     {
-        PrivateAnimeSeason::create([
+        PrivateAnimeMovie::create([
             'name'             => $request->name,
             'slug'             => Str::slug($request->name),
             'description'      => $request->description,
-            'episode'          => $request->episode,
+            'alt_name'          => $request->alt_name,
             'release_status_id'=> $request->release_status_id,
             'private_anime_id' => $request->private_anime_id,
         ]);
@@ -48,20 +48,20 @@ class PrivateAnimeSeasonController extends Controller
      /**
      * Display the specified resource.
      */
-    public function show(User $user, PrivateAnime $privateAnime,PrivateAnimeSeason $privateAnimeSeason)
+    public function show(User $user, PrivateAnime $privateAnime,PrivateAnimeMovie $privateAnimeMovie)
     {
-        return $this->customResponse->success(PrivateAnimeSeasonResource::make($privateAnimeSeason));
+        return $this->customResponse->success(PrivateAnimeMovieResource::make($privateAnimeMovie));
     }
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePrivateAnimeSeasonRequest $request, User $user, PrivateAnime $privateAnime,PrivateAnimeSeason $privateAnimeSeason)
+    public function update(UpdatePrivateAnimeMovieRequest $request, User $user, PrivateAnime $privateAnime,PrivateAnimeMovie $privateAnimeMovie)
     {
-        $privateAnimeSeason->update([
+        $privateAnimeMovie->update([
             'name'             => $request->name,
             'slug'             => Str::slug($request->name),
             'description'      => $request->description,
-            'episode'          => $request->episode,
+            'alt_name'          => $request->alt_name,
             'release_status_id'=> $request->release_status_id,
             'private_anime_id' => $request->private_anime_id,
         ]);
@@ -72,9 +72,9 @@ class PrivateAnimeSeasonController extends Controller
      /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user,PrivateAnime $privateAnime, PrivateAnimeSeason $privateAnimeSeason)
+    public function destroy(User $user,PrivateAnime $privateAnime, PrivateAnimeMovie $privateAnimeMovie)
     {
-        $privateAnimeSeason->delete();
+        $privateAnimeMovie->delete();
 
         return $this->customResponse->deletedResponse();
     }
