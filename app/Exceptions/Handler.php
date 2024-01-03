@@ -43,5 +43,6 @@ class Handler extends ExceptionHandler
                 ], $e->getStatusCode());
             }
         });
+
     }
 }

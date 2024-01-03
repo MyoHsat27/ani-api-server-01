@@ -40,7 +40,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         //Route for managing resources related to a specific readlist
         Route::prefix('readlists/{readlist}')->scopeBindings()->group(function () {
-            Route::apiResource('mangas', PrivateMangaReadlistController::class)->only([
+            Route::apiResource('private-mangas', PrivateMangaReadlistController::class)->only([
                 'index',
                 'store',
                 'destroy',
