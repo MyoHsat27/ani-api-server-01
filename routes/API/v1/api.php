@@ -11,6 +11,8 @@ use App\Http\Controllers\API\v1\WatchlistController;
 use App\Http\Controllers\API\v1\ReadlistController;
 use App\Http\Controllers\API\v1\PrivateAnimeWatchlistController;
 use App\Http\Controllers\API\v1\PrivateMangaReadlistController;
+use App\Http\Controllers\API\v1\PrivateAnimeWatchStatusController;
+use App\Http\Controllers\API\v1\PrivateMangaReadStatusController;
 
 
 // Authenticated Routes
@@ -22,23 +24,23 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::apiResource('private-genres', PrivateGenreController::class);
         Route::apiResource('readlists', ReadlistController::class);
         Route::apiResource('watchlists', WatchlistController::class);
-
         Route::apiResource('private-animes', PrivateAnimeController::class);
-        //        Route::apiResource('favourites', FavouriteController::class)
-        //            ->except('update');
 
-        // Routes for managing resources related to a specific anime
-               Route::prefix('private-animes/{private_anime}')->scopeBindings()->group(function () {
-                    Route::apiResource('private-anime-seasons',PrivateAnimeSeasonController::class);
-                    Route::apiResource('private-anime-movies',PrivateAnimeMovieController::class);
-                //    Route::apiResource('playlists', PlaylistController::class);
-                //    Route::apiResource('genres',AnimeSingleGenreController::class)->except(['update','show']);
-               });
+        // Routes for managing resources related to a specific private-anime
+        Route::prefix('private-animes/{private_anime}')->name('private-animes.')->scopeBindings()->group(function () {
+            Route::apiResource('private-anime-seasons', PrivateAnimeSeasonController::class);
+            Route::apiResource('private-anime-movies', PrivateAnimeMovieController::class);
+            Route::prefix('watch-statuses')->group(function () {
+                Route::post('', [PrivateAnimeWatchStatusController::class, 'store']);
+            });
+        });
 
-        //Route for managing resources related to a specific manga
-        //        Route::prefix('mangas/{manga}')->scopeBindings()->group(function () {
-        //            Route::apiResource('genres',MangaSingleGenreController::class)->except(['update','show']);
-        //        });
+        //Route for managing resources related to a specific private-manga
+        Route::prefix('private-mangas/{private_manga}')->name('private-mangas.')->scopeBindings()->group(function () {
+            Route::prefix('read-statuses')->name('read-statuses')->group(function () {
+                Route::post('', [PrivateMangaReadStatusController::class, 'store']);
+            });
+        });
 
         //Route for managing resources related to a specific readlist
         Route::prefix('readlists/{readlist}')->scopeBindings()->group(function () {
@@ -57,8 +59,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
                 'destroy',
             ]);
         });
-
-
     });
 
     // Authentication-related Routes
