@@ -27,20 +27,20 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::apiResource('private-animes', PrivateAnimeController::class);
 
         // Routes for managing resources related to a specific private-anime
-        Route::prefix('private-animes/{private_anime}')->name('private-animes.')->scopeBindings()->group(function () {
-            Route::apiResource('private-anime-seasons', PrivateAnimeSeasonController::class);
-            Route::apiResource('private-anime-movies', PrivateAnimeMovieController::class);
-            Route::prefix('watch-statuses')->group(function () {
-                Route::post('', [PrivateAnimeWatchStatusController::class, 'store']);
+        Route::prefix('private-animes/{private_anime}')->name('private-animes.')->scopeBindings()
+            ->group(function () {
+                Route::apiResource('private-anime-seasons', PrivateAnimeSeasonController::class);
+                Route::apiResource('private-anime-movies', PrivateAnimeMovieController::class);
+                Route::apiResource('watch-statuses', PrivateAnimeWatchStatusController::class)
+                    ->only(['store', 'show', 'destroy']);
             });
-        });
 
         //Route for managing resources related to a specific private-manga
-        Route::prefix('private-mangas/{private_manga}')->name('private-mangas.')->scopeBindings()->group(function () {
-            Route::prefix('read-statuses')->name('read-statuses')->group(function () {
-                Route::post('', [PrivateMangaReadStatusController::class, 'store']);
+        Route::prefix('private-mangas/{private_manga}')->name('private-mangas.')->scopeBindings()
+            ->group(function () {
+                Route::apiResource('read-statuses', PrivateMangaReadStatusController::class)
+                    ->only(['store', 'show', 'destroy']);
             });
-        });
 
         //Route for managing resources related to a specific readlist
         Route::prefix('readlists/{readlist}')->scopeBindings()->group(function () {
