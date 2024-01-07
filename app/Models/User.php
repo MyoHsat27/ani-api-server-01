@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -45,12 +46,10 @@ class User extends Authenticatable
         'password'          => 'hashed',
     ];
 
-
     public function getRouteKeyName(): string
     {
         return 'slug';
     }
-
 
     public function readlists(): HasMany
     {
@@ -80,5 +79,10 @@ class User extends Authenticatable
     public function privateMangaReadStatuses(): HasMany
     {
         return $this->hasMany(PrivateMangaReadStatus::class);
+    }
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'user_roles');
     }
 }

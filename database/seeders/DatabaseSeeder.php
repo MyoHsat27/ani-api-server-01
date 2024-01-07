@@ -7,10 +7,6 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use App\Models\MangaType;
-use App\Models\ReleaseStatus;
-use App\Models\WatchStatus;
-use App\Models\FavouriteLevel;
 
 class DatabaseSeeder extends Seeder
 {
@@ -29,40 +25,13 @@ class DatabaseSeeder extends Seeder
             'remember_token'    => Str::random(10),
         ]);
 
-        // Default Manga Types
-        $mangaTypes = ['manga', "manhwa", "manhua"];
-        foreach ($mangaTypes as $type) {
-            MangaType::factory()->create([
-                'type' => $type,
-            ]);
-        }
-
-        // Default Release Status Types
-        $releaseStatusTypes = ['on-going', 'coming-soon', 'finished', 'dropped', 'hiatus'];
-        foreach ($releaseStatusTypes as $type) {
-            ReleaseStatus::factory()->create([
-                'status' => $type,
-            ]);
-        }
-
-        // Default Watch Status Types
-        $watchStatusTypes = ['currently', 'completed', 'dropped', 'on-hold', 'plan-to-watch'];
-        foreach ($watchStatusTypes as $type) {
-            WatchStatus::factory()->create([
-                'status' => $type,
-            ]);
-        }
-
-        // Default Favourite Levels
-        $favouriteLevels = ['trash', 'bad', 'normal', 'good', 'best', 'goat'];
-        foreach ($favouriteLevels as $level) {
-            FavouriteLevel::factory()->create([
-                'level' => $level,
-            ]);
-        }
-
 
         $this->call([
+            MangaTypeSeeder::class,
+            FavouriteSeeder::class,
+            ReleaseStatusSeeder::class,
+            WatchStatusSeeder::class,
+            RoleSeeder::class,
             UserSeeder::class,
             PrivateMangaSeeder::class,
             PrivateAnimeSeeder::class,
