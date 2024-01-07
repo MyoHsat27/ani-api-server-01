@@ -15,10 +15,13 @@ use App\Http\Response\CustomResponse;
 class AuthControllerV1
 {
     protected CustomResponse $customResponse;
+    protected UserRoleController $userRoleController;
 
-    public function __construct(CustomResponse $customResponse)
+    public function __construct(CustomResponse $customResponse,
+        UserRoleController $userRoleController)
     {
         $this->customResponse = $customResponse;
+        $this->userRoleController = $userRoleController;
     }
 
     /**
@@ -58,12 +61,14 @@ class AuthControllerV1
      */
     public function register(StoreUserRequest $request): JsonResponse
     {
-        User::create([
+        $user = User::create([
             'username' => $request->username,
             'slug'     => Str::slug($request->username),
             'email'    => $request->email,
             'password' => $request->password,
         ]);
+
+        $this->userRoleController->addRole($user, $request->role_id);
 
         return $this->customResponse->createdResponse('User Created Successfully');
     }

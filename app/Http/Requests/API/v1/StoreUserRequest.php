@@ -26,19 +26,11 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username'     => 'required|min:4|max:20|unique:users,username',
+            'username' => 'required|min:4|max:20|unique:users,username',
             'email'    => 'required|unique:users,email|email|regex:/^[^@]+@[^@]+\.[a-zA-Z]{2,}$/',
+            'role_id'  => 'required|exists:roles,id',
             'password' => 'required|min:8|confirmed',
         ];
     }
 
-    public function failedValidation(Validator $validator)
-    {
-        $response = new JsonResponse([
-            'status'  => 'error',
-            'message' => "Validation error",
-            'errors'  => $validator->errors(),
-        ], 401);
-        throw new HttpResponseException($response);
-    }
 }

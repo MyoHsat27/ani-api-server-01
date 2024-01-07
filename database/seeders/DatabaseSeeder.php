@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
             PrivateMangaReadStatusSeeder::class,
             ReadlistSeeder::class,
             WatchlistSeeder::class,
+            UserRoleSeeder::class,
         ]);
     }
 }
