@@ -51,6 +51,11 @@ class PrivateAnime extends Model
         ];
     }
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function releaseStatus(): BelongsTo
     {
         return $this->belongsTo(ReleaseStatus::class);
@@ -61,17 +66,22 @@ class PrivateAnime extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function privateAnimeWatchStatuses(): HasMany
+    public function watchlists(): BelongsToMany
+    {
+        return $this->belongsToMany(Watchlist::class, 'private_anime_watchlists');
+    }
+
+    public function watchStatuses(): HasMany
     {
         return $this->hasMany(PrivateAnimeWatchStatus::class, 'private_anime_watch_statuses');
     }
 
-    public function privateAnimeSeasons(): HasMany
+    public function seasons(): HasMany
     {
         return $this->hasMany(PrivateAnimeSeason::class);
     }
 
-    public function privateAnimeMovies(): HasMany
+    public function movies(): HasMany
     {
         return $this->hasMany(PrivateAnimeMovie::class);
     }
@@ -79,16 +89,6 @@ class PrivateAnime extends Model
     public function privateGenres(): BelongsToMany
     {
         return $this->belongsToMany(PrivateGenre::class, 'private_anime_genres');
-    }
-
-    public function privateAnimeWatchlist(): BelongsToMany
-    {
-        return $this->belongsToMany(Watchlist::class, 'private_anime_watchlists');
-    }
-
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
     }
 
 }

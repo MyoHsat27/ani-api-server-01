@@ -25,7 +25,7 @@ class PrivateAnimeMovieController extends Controller
 
     public function index(User $user, PrivateAnime $privateAnime)
     {
-        return $this->customResponse->success(new PrivateAnimeMovieCollection($privateAnime->privateAnimeMovies));
+        return $this->customResponse->success(new PrivateAnimeMovieCollection($privateAnime->movies));
     }
 
      /**
@@ -48,16 +48,16 @@ class PrivateAnimeMovieController extends Controller
      /**
      * Display the specified resource.
      */
-    public function show(User $user, PrivateAnime $privateAnime,PrivateAnimeMovie $privateAnimeMovie)
+    public function show(User $user, PrivateAnime $privateAnime,PrivateAnimeMovie $movie)
     {
-        return $this->customResponse->success(PrivateAnimeMovieResource::make($privateAnimeMovie));
+        return $this->customResponse->success(PrivateAnimeMovieResource::make($movie));
     }
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePrivateAnimeMovieRequest $request, User $user, PrivateAnime $privateAnime,PrivateAnimeMovie $privateAnimeMovie)
+    public function update(UpdatePrivateAnimeMovieRequest $request, User $user, PrivateAnime $privateAnime,PrivateAnimeMovie $movie)
     {
-        $privateAnimeMovie->update([
+        $movie->update([
             'name'             => $request->name,
             'slug'             => Str::slug($request->name),
             'description'      => $request->description,
@@ -72,9 +72,9 @@ class PrivateAnimeMovieController extends Controller
      /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user,PrivateAnime $privateAnime, PrivateAnimeMovie $privateAnimeMovie)
+    public function destroy(User $user,PrivateAnime $privateAnime, PrivateAnimeMovie $movie)
     {
-        $privateAnimeMovie->delete();
+        $movie->delete();
 
         return $this->customResponse->deletedResponse();
     }

@@ -15,12 +15,13 @@ class PrivateAnimeMovieResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id'                => $this->id,
             'name'              => $this->name,
             'slug'              => $this->slug,
             'alt_name'          => $this->alt_name,
             'description'       => $this->description,
-            'release_status_id' => $this->releaseStatus->status,
-            'private_anime_id'  => $this->privateAnime->name
+            'release_status' => $this->releaseStatus->status,
+            'private_anime'  => $this->privateAnime->name,
         ];
     }
 }

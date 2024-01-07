@@ -60,14 +60,24 @@ class PrivateManga extends Model
         return 'slug';
     }
 
-    public function releaseStatus(): BelongsTo
-    {
-        return $this->belongsTo(ReleaseStatus::class);
-    }
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function readlists(): BelongsToMany
+    {
+        return $this->belongsToMany(Readlist::class, 'private_manga_readlists');
+    }
+
+    public function readStatuses(): HasMany
+    {
+        return $this->hasMany(PrivateMangaReadStatus::class, 'private_manga_read_statuses');
+    }
+
+    public function releaseStatus(): BelongsTo
+    {
+        return $this->belongsTo(ReleaseStatus::class);
     }
 
     public function mangaType(): BelongsTo
@@ -78,16 +88,6 @@ class PrivateManga extends Model
     public function privateGenres(): BelongsToMany
     {
         return $this->belongsToMany(PrivateGenre::class, 'private_manga_genres');
-    }
-
-    public function privateMangaReadStatus(): HasMany
-    {
-        return $this->hasMany(PrivateMangaReadStatus::class, 'private_manga_read_statuses');
-    }
-
-    public function readlists(): BelongsToMany
-    {
-        return $this->belongsToMany(Readlist::class, 'private_manga_readlists');
     }
 
 }

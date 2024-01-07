@@ -15,13 +15,13 @@ class PrivateAnimeSeasonResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'          => $this->id,
-            'name'        => $this->name,
-            'slug'        => $this->slug,
-            'episode'     => $this->episode,
-            'description' => $this->description,
-            'releaseStatus'=>$this->releaseStatus->status,
-            'privateAnime'=> $this->privateAnime->name,
+            'id'            => $this->id,
+            'name'          => $this->name,
+            'slug'          => $this->slug,
+            'episode'       => $this->episode,
+            'description'   => $this->description,
+            'release_status' => $this->releaseStatus->status,
+            'private_anime'  => $this->privateAnime->name,
         ];
     }
 }

@@ -11,70 +11,77 @@ use App\Http\Response\CustomResponse;
 use App\Models\PrivateAnime;
 use App\Models\PrivateAnimeSeason;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class PrivateAnimeSeasonController extends Controller
 {
     protected CustomResponse $customResponse;
 
-    public function __construct( CustomResponse $customResponse)
+    public function __construct(CustomResponse $customResponse)
     {
         $this->customResponse = $customResponse;
     }
 
     public function index(User $user, PrivateAnime $privateAnime)
     {
-        return $this->customResponse->success(new PrivateAnimeSeasonCollection($privateAnime->privateAnimeSeasons));
+        return $this->customResponse->success(new PrivateAnimeSeasonCollection($privateAnime->seasons
+        )
+        );
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePrivateAnimeSeasonRequest $request,User $user,PrivateAnime $privateAnime)
+    public function store(StorePrivateAnimeSeasonRequest $request,
+        User $user,
+        PrivateAnime $privateAnime)
     {
         PrivateAnimeSeason::create([
-            'name'             => $request->name,
-            'slug'             => Str::slug($request->name),
-            'description'      => $request->description,
-            'episode'          => $request->episode,
-            'release_status_id'=> $request->release_status_id,
-            'private_anime_id' => $request->private_anime_id,
+            'name'              => $request->name,
+            'slug'              => Str::slug($request->name),
+            'description'       => $request->description,
+            'episode'           => $request->episode,
+            'release_status_id' => $request->release_status_id,
+            'private_anime_id'  => $request->private_anime_id,
         ]);
 
         return $this->customResponse->createdResponse();
     }
 
-     /**
+    /**
      * Display the specified resource.
      */
-    public function show(User $user, PrivateAnime $privateAnime,PrivateAnimeSeason $privateAnimeSeason)
+    public function show(User $user, PrivateAnime $privateAnime, PrivateAnimeSeason $season)
     {
-        return $this->customResponse->success(PrivateAnimeSeasonResource::make($privateAnimeSeason));
+        return $this->customResponse->success(PrivateAnimeSeasonResource::make($season));
     }
+
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePrivateAnimeSeasonRequest $request, User $user, PrivateAnime $privateAnime,PrivateAnimeSeason $privateAnimeSeason)
+    public function update(UpdatePrivateAnimeSeasonRequest $request,
+        User $user,
+        PrivateAnime $privateAnime,
+        PrivateAnimeSeason $season)
     {
-        $privateAnimeSeason->update([
-            'name'             => $request->name,
-            'slug'             => Str::slug($request->name),
-            'description'      => $request->description,
-            'episode'          => $request->episode,
-            'release_status_id'=> $request->release_status_id,
-            'private_anime_id' => $request->private_anime_id,
+        $season->update([
+            'name'              => $request->name,
+            'slug'              => Str::slug($request->name),
+            'description'       => $request->description,
+            'episode'           => $request->episode,
+            'release_status_id' => $request->release_status_id,
+            'private_anime_id'  => $request->private_anime_id,
         ]);
 
         return $this->customResponse->updatedResponse();
     }
 
-     /**
+    /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user,PrivateAnime $privateAnime, PrivateAnimeSeason $privateAnimeSeason)
+    public function destroy(User $user, PrivateAnime $privateAnime, PrivateAnimeSeason $season)
     {
-        $privateAnimeSeason->delete();
+        $season->delete();
 
         return $this->customResponse->deletedResponse();
     }

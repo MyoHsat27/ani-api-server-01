@@ -29,8 +29,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         // Routes for managing resources related to a specific private-anime
         Route::prefix('private-animes/{private_anime}')->name('private-animes.')->scopeBindings()
             ->group(function () {
-                Route::apiResource('private-anime-seasons', PrivateAnimeSeasonController::class);
-                Route::apiResource('private-anime-movies', PrivateAnimeMovieController::class);
+                Route::apiResource('seasons', PrivateAnimeSeasonController::class);
+                Route::apiResource('movies', PrivateAnimeMovieController::class);
                 Route::apiResource('watch-statuses', PrivateAnimeWatchStatusController::class)
                     ->only(['store', 'show', 'destroy']);
             });
