@@ -43,7 +43,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             });
 
         //Route for managing resources related to a specific readlist
-        Route::prefix('readlists/{readlist}')->scopeBindings()->group(function () {
+        Route::prefix('readlists/{readlist}')->name('readlists')->scopeBindings()->group(function () {
             Route::apiResource('private-mangas', PrivateMangaReadlistController::class)->only([
                 'index',
                 'store',
@@ -52,7 +52,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         });
 
         //Route for managing resources related to a specific watchlist
-        Route::prefix('watchlists/{watchlist}')->scopeBindings()->group(function () {
+        Route::prefix('watchlists/{watchlist}')->name('watchlists')->scopeBindings()->group(function () {
             Route::apiResource('private-animes', PrivateAnimeWatchlistController::class)->only([
                 'index',
                 'store',

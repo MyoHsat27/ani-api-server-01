@@ -15,13 +15,10 @@ use App\Http\Response\CustomResponse;
 class AuthControllerV1
 {
     protected CustomResponse $customResponse;
-    protected UserRoleController $userRoleController;
 
-    public function __construct(CustomResponse $customResponse,
-        UserRoleController $userRoleController)
+    public function __construct(CustomResponse $customResponse)
     {
         $this->customResponse = $customResponse;
-        $this->userRoleController = $userRoleController;
     }
 
     /**
@@ -68,7 +65,6 @@ class AuthControllerV1
             'password' => $request->password,
         ]);
 
-        $this->userRoleController->addRole($user, $request->role_id);
 
         return $this->customResponse->createdResponse('User Created Successfully');
     }
