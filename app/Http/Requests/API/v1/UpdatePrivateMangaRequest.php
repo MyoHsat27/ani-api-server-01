@@ -43,7 +43,13 @@ class UpdatePrivateMangaRequest extends FormRequest
             'image_url'         => 'sometimes|nullable|url',
             'release_status_id' => 'sometimes|exists:release_statuses,id',
             'manga_type_id'     => 'sometimes|exists:manga_types,id',
-            'genres'            => 'sometimes|exists:private_genres,id',
+            'genres'            => [
+                'sometimes',
+                'array',
+                Rule::exists('private_genres', 'id')->where(function ($query) {
+                    $query->where('user_id', auth()->id());
+                }),
+            ],
         ];
     }
 }

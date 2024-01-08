@@ -5,6 +5,7 @@ namespace App\Http\Requests\API\v1;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 class StorePrivateAnimeRequest extends FormRequest
 {
@@ -19,7 +20,7 @@ class StorePrivateAnimeRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -38,7 +39,13 @@ class StorePrivateAnimeRequest extends FormRequest
             'resource_url'      => 'nullable|url',
             'image_url'         => 'nullable|url',
             'release_status_id' => 'required|exists:release_statuses,id',
-            'genres'            => 'required|exists:private_genres,id|array',
+            'genres'            => [
+                'required',
+                'array',
+                Rule::exists('private_genres', 'id')->where(function ($query) {
+                    $query->where('user_id', auth()->id());
+                }),
+            ],
         ];
     }
 

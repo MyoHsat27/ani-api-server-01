@@ -41,7 +41,13 @@ class StorePrivateMangaRequest extends FormRequest
             'image_url'         => 'nullable|url',
             'release_status_id' => 'required|exists:release_statuses,id',
             'manga_type_id'     => 'required|exists:manga_types,id',
-            'genres'            => 'required|exists:private_genres,id|array',
+            'genres'            => [
+                'required',
+                'array',
+                Rule::exists('private_genres', 'id')->where(function ($query) {
+                    $query->where('user_id', auth()->id());
+                }),
+            ],
         ];
     }
 
