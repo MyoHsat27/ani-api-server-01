@@ -31,7 +31,6 @@ class StorePrivateAnimeMovieRequest extends FormRequest
             'description'  => 'required|max:500|string',
             'alt_name'     => 'required|max:50|nullable',
             'release_status_id' =>'required|exists:release_statuses,id',
-            'private_anime_id'  =>'required|exists:private_animes,id'
         ];
     }
 }
