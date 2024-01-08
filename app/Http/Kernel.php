@@ -27,6 +27,7 @@ use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
 use Illuminate\Http\Middleware\HandleCors;
 use App\Http\Middleware\TrustProxies;
+use App\Http\Middleware\CheckPrivateUserRoute;
 
 class Kernel extends HttpKernel
 {
@@ -67,6 +68,7 @@ class Kernel extends HttpKernel
             SubstituteBindings::class,
             ApiVersionMiddleware::class,
             ThrottleRequests::class.":api",
+            CheckPrivateUserRoute::class
         ],
     ];
 
@@ -89,5 +91,6 @@ class Kernel extends HttpKernel
         'signed'           => ValidateSignature::class,
         'throttle'         => ThrottleRequests::class,
         'verified'         => EnsureEmailIsVerified::class,
+        'check.private.user' => CheckPrivateUserRoute::class
     ];
 }
