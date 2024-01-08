@@ -68,6 +68,7 @@ class Kernel extends HttpKernel
             SubstituteBindings::class,
             ApiVersionMiddleware::class,
             ThrottleRequests::class.":api",
+            CheckPrivateUserRoute::class
         ],
     ];
 

@@ -12,6 +12,8 @@ use App\Models\PrivateAnimeMovie;
 use App\Policies\v1\PrivateAnimeMoviePolicy;
 use App\Models\PrivateAnimeSeason;
 use App\Policies\v1\PrivateAnimeSeasonPolicy;
+use App\Models\PrivateGenre;
+use App\Policies\v1\PrivateGenrePolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -23,6 +25,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         PrivateManga::class => PrivateMangaPolicy::class,
         PrivateAnime::class => PrivateAnimePolicy::class,
+        PrivateGenre::class => PrivateGenrePolicy::class,
         PrivateAnimeMovie::class => PrivateAnimeMoviePolicy::class,
         PrivateAnimeSeason::class => PrivateAnimeSeasonPolicy::class
     ];

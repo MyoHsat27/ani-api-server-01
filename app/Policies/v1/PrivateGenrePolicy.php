@@ -13,15 +13,15 @@ class PrivateGenrePolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->hasVerifiedEmail();
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, PrivateGenre $privateGenre): bool
+    public function view(User $user, PrivateGenre $genre): Response
     {
-        //
+        return $user->id === $genre->user_id ? Response::allow() : Response::denyAsNotFound();
     }
 
     /**
@@ -29,38 +29,22 @@ class PrivateGenrePolicy
      */
     public function create(User $user): bool
     {
-        //
+        return $user->hasVerifiedEmail();
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, PrivateGenre $privateGenre): bool
+    public function update(User $user, PrivateGenre $genre): Response
     {
-        //
+        return $user->id === $genre->user_id ? Response::allow() : Response::denyAsNotFound();
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, PrivateGenre $privateGenre): bool
+    public function delete(User $user, PrivateGenre $genre): Response
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, PrivateGenre $privateGenre): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, PrivateGenre $privateGenre): bool
-    {
-        //
+        return $user->id === $genre->user_id ? Response::allow() : Response::denyAsNotFound();
     }
 }

@@ -21,6 +21,7 @@ class PrivateGenreController extends Controller
 
     public function __construct(CustomResponse $customResponse)
     {
+        $this->authorizeResource(PrivateGenre::class);
         $this->customResponse = $customResponse;
     }
 
@@ -30,8 +31,6 @@ class PrivateGenreController extends Controller
     public function index(FilterRepository $filterRepository, User $user, Request $request)
     {
         $privateGenres = $filterRepository->paginate($user->privateGenres()->getQuery(), $request);
-
-
         return $this->customResponse->success(new PrivateGenreCollection($privateGenres));
     }
 
