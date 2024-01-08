@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
 
 
         $this->call([
+            RoleSeeder::class,
             MangaTypeSeeder::class,
             FavouriteSeeder::class,
             ReleaseStatusSeeder::class,

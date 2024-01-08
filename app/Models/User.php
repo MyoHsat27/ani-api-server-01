@@ -81,9 +81,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(PrivateMangaReadStatus::class);
     }
-
-    public function roles(): BelongsToMany
-    {
-        return $this->belongsToMany(Role::class, 'user_roles');
-    }
 }

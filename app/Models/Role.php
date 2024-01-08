@@ -15,17 +15,6 @@ class Role extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['name','slug','description'];
-
-
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
-    }
-
-    public function users(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'user_roles');
-    }
+    protected $fillable = ['name', 'guard_name'];
 
 }
