@@ -18,7 +18,7 @@ class ApiVersionMiddleware
         $requestedVersion = $request->segment(2);
         $supportedVersion = ['v1', 'v2'];
         if (!in_array($requestedVersion, $supportedVersion)) {
-            return response()->json(['error' => 'Unsupported API Version']);
+            return response()->json(['error' => 'Unsupported API Version'],400);
         }
         $request->attributes->add(['api_version' => $requestedVersion]);
 

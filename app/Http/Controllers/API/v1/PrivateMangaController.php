@@ -28,6 +28,7 @@ class PrivateMangaController extends Controller
         CustomResponse $customResponse,
         PrivateMangaGenreController $privateMangaGenreController)
     {
+        $this->authorizeResource(PrivateManga::class);
         $this->customResponse = $customResponse;
         $this->privateMangaGenreController = $privateMangaGenreController;
     }
@@ -39,8 +40,6 @@ class PrivateMangaController extends Controller
         PrivateMangaFilterRequest $request,
         User $user)
     {
-
-        $this->authorize('create', PrivateManga::class);
         // Get the initial builder with search filtering
         $query = $filterRepository->filterBySearchKeyword($user,
             PrivateManga::class,
@@ -68,7 +67,6 @@ class PrivateMangaController extends Controller
      */
     public function store(StorePrivateMangaRequest $request)
     {
-        $this->authorize('create', PrivateManga::class);
         $privateManga = PrivateManga::create([
             'name'              => $request->name,
             'slug'              => Str::slug($request->name),
@@ -91,8 +89,6 @@ class PrivateMangaController extends Controller
      */
     public function show(User $user, PrivateManga $privateManga)
     {
-        $this->authorize('view', $privateManga);
-
         return $this->customResponse->success(PrivateMangaResource::make($privateManga));
     }
 
@@ -103,7 +99,6 @@ class PrivateMangaController extends Controller
         User $user,
         PrivateManga $privateManga)
     {
-        $this->authorize('update', $privateManga);
         $privateManga->update([
             'name'              => $request->name,
             'slug'              => Str::slug($request->name),
@@ -127,7 +122,6 @@ class PrivateMangaController extends Controller
      */
     public function destroy(User $user, PrivateManga $privateManga)
     {
-        $this->authorize('delete', $privateManga);
         $this->privateMangaGenreController->destroyMultiple($privateManga);
         $privateManga->delete();
 

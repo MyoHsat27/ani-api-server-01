@@ -27,6 +27,7 @@ class PrivateAnimeController extends Controller
     public function __construct( CustomResponse $customResponse,
         PrivateAnimeGenreController $privateAnimeGenreController)
     {
+        $this->authorizeResource(PrivateAnime::class);
         $this->customResponse = $customResponse;
         $this->privateAnimeGenreController = $privateAnimeGenreController;
     }

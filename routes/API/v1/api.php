@@ -13,13 +13,15 @@ use App\Http\Controllers\API\v1\PrivateAnimeWatchlistController;
 use App\Http\Controllers\API\v1\PrivateMangaReadlistController;
 use App\Http\Controllers\API\v1\PrivateAnimeWatchStatusController;
 use App\Http\Controllers\API\v1\PrivateMangaReadStatusController;
+use App\Http\Middleware\CheckPrivateUserRoute;
 
 
 // Authenticated Routes
 Route::middleware(['auth:sanctum'])->group(function () {
 
     // Routes for managing resources related to a single user
-    Route::prefix('users/{user}')->scopeBindings()->group(function () {
+    Route::prefix('users/{user}')
+        ->scopeBindings()->group(function () {
         Route::apiResource('private-mangas', PrivateMangaController::class);
         Route::apiResource('private-genres', PrivateGenreController::class);
         Route::apiResource('readlists', ReadlistController::class);
@@ -43,22 +45,24 @@ Route::middleware(['auth:sanctum'])->group(function () {
             });
 
         //Route for managing resources related to a specific readlist
-        Route::prefix('readlists/{readlist}')->name('readlists')->scopeBindings()->group(function () {
-            Route::apiResource('private-mangas', PrivateMangaReadlistController::class)->only([
-                'index',
-                'store',
-                'destroy',
-            ]);
-        });
+        Route::prefix('readlists/{readlist}')->name('readlists')->scopeBindings()
+            ->group(function () {
+                Route::apiResource('private-mangas', PrivateMangaReadlistController::class)->only([
+                    'index',
+                    'store',
+                    'destroy',
+                ]);
+            });
 
         //Route for managing resources related to a specific watchlist
-        Route::prefix('watchlists/{watchlist}')->name('watchlists')->scopeBindings()->group(function () {
-            Route::apiResource('private-animes', PrivateAnimeWatchlistController::class)->only([
-                'index',
-                'store',
-                'destroy',
-            ]);
-        });
+        Route::prefix('watchlists/{watchlist}')->name('watchlists')->scopeBindings()
+            ->group(function () {
+                Route::apiResource('private-animes', PrivateAnimeWatchlistController::class)->only([
+                    'index',
+                    'store',
+                    'destroy',
+                ]);
+            });
     });
 
     // Authentication-related Routes

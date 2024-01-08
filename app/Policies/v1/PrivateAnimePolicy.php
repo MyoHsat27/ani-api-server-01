@@ -13,7 +13,7 @@ class PrivateAnimePolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->hasVerifiedEmail();
     }
 
     /**
@@ -46,21 +46,5 @@ class PrivateAnimePolicy
     public function delete(User $user, PrivateAnime $anime): Response
     {
         return $user->id === $anime->user_id ? Response::allow() : Response::denyAsNotFound();
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, PrivateAnime $anime): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, PrivateAnime $anime): bool
-    {
-        //
     }
 }
