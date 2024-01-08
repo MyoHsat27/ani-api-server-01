@@ -24,8 +24,10 @@ class PrivateAnimeSeasonController extends Controller
 
     public function index(User $user, PrivateAnime $privateAnime)
     {
+        $this->authorize('viewAny', [PrivateAnimeSeason::class, $privateAnime]);
+
         return $this->customResponse->success(new PrivateAnimeSeasonCollection($privateAnime->seasons
-        )
+            )
         );
     }
 
@@ -36,6 +38,7 @@ class PrivateAnimeSeasonController extends Controller
         User $user,
         PrivateAnime $privateAnime)
     {
+        $this->authorize('create', [PrivateAnimeSeason::class, $privateAnime]);
         PrivateAnimeSeason::create([
             'name'              => $request->name,
             'slug'              => Str::slug($request->name),
@@ -53,6 +56,8 @@ class PrivateAnimeSeasonController extends Controller
      */
     public function show(User $user, PrivateAnime $privateAnime, PrivateAnimeSeason $season)
     {
+        $this->authorize('view', [PrivateAnimeSeason::class, $privateAnime]);
+
         return $this->customResponse->success(PrivateAnimeSeasonResource::make($season));
     }
 
@@ -64,6 +69,7 @@ class PrivateAnimeSeasonController extends Controller
         PrivateAnime $privateAnime,
         PrivateAnimeSeason $season)
     {
+        $this->authorize('update', [PrivateAnimeSeason::class, $privateAnime]);
         $season->update([
             'name'              => $request->name,
             'slug'              => Str::slug($request->name),
@@ -81,6 +87,7 @@ class PrivateAnimeSeasonController extends Controller
      */
     public function destroy(User $user, PrivateAnime $privateAnime, PrivateAnimeSeason $season)
     {
+        $this->authorize('delete', [PrivateAnimeSeason::class, $privateAnime]);
         $season->delete();
 
         return $this->customResponse->deletedResponse();

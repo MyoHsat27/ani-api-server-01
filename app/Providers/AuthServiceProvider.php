@@ -10,6 +10,8 @@ use App\Policies\v1\PrivateMangaPolicy;
 use App\Policies\v1\PrivateAnimePolicy;
 use App\Models\PrivateAnimeMovie;
 use App\Policies\v1\PrivateAnimeMoviePolicy;
+use App\Models\PrivateAnimeSeason;
+use App\Policies\v1\PrivateAnimeSeasonPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -22,6 +24,7 @@ class AuthServiceProvider extends ServiceProvider
         PrivateManga::class => PrivateMangaPolicy::class,
         PrivateAnime::class => PrivateAnimePolicy::class,
         PrivateAnimeMovie::class => PrivateAnimeMoviePolicy::class,
+        PrivateAnimeSeason::class => PrivateAnimeSeasonPolicy::class
     ];
 
     /**
