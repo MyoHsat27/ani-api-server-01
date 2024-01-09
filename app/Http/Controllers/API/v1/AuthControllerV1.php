@@ -35,7 +35,6 @@ class AuthControllerV1
         if (!Auth::attempt($credentials)) {
             return $this->customResponse->error('Incorrect Username or Password', 401);
         }
-
         $user = User::where('email', $request->email)->first();
 
         $accessToken = $user->createToken("auth_token", ['*'], now()->addHours(3));
@@ -65,6 +64,7 @@ class AuthControllerV1
             'password' => $request->password,
         ]);
 
+        $user->assignRole('basic-user');
 
         return $this->customResponse->createdResponse('User Created Successfully');
     }

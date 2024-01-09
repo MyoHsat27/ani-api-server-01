@@ -14,7 +14,7 @@ class RoleSeeder extends Seeder
     {
         $roles = ['basic-user', 'vip-user', 'author', 'admin', 'super-admin'];
         foreach ($roles as $role) {
-            Role::factory()->create(['name' => $role, 'guard_name' => 'api']);
+            Role::factory()->create(['name' => $role, 'guard_name' => 'web']);
         }
     }
 }

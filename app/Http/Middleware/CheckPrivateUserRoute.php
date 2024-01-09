@@ -17,7 +17,7 @@ class CheckPrivateUserRoute
     public function handle(Request $request, Closure $next): Response
     {
         if (auth()->check() && auth()->user()->id !== $request->user->id) {
-            return response()->json(['error' => 'Unauthorized Action'],401);
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized Action'],401);
         }
 
         return $next($request);
