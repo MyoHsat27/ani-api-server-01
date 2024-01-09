@@ -18,6 +18,10 @@ use App\Models\Watchlist;
 use App\Policies\v1\WatchlistPolicy;
 use App\Models\Readlist;
 use App\Policies\v1\ReadlistPolicy;
+use App\Models\PrivateAnimeWatchlist;
+use App\Policies\v1\PrivateAnimeWatchlistPolicy;
+use App\Models\PrivateMangaReadlist;
+use App\Policies\v1\PrivateMangaReadlistPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -33,7 +37,9 @@ class AuthServiceProvider extends ServiceProvider
         PrivateAnimeMovie::class => PrivateAnimeMoviePolicy::class,
         PrivateAnimeSeason::class => PrivateAnimeSeasonPolicy::class,
         Watchlist::class => WatchlistPolicy::class,
-        Readlist::class => ReadlistPolicy::class
+        Readlist::class => ReadlistPolicy::class,
+        PrivateAnimeWatchlist::class => PrivateAnimeWatchlistPolicy::class,
+        PrivateMangaReadlist::class => PrivateMangaReadlistPolicy::class
     ];
 
     /**

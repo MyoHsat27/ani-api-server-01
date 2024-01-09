@@ -10,6 +10,7 @@ use App\Http\Response\CustomResponse;
 use App\Http\Requests\API\v1\StorePrivateAnimeWatchlistRequest;
 use App\Http\Resources\v1\PrivateAnimeWatchlistCollection;
 use App\Http\Resources\v1\WatchlistResource;
+use App\Models\PrivateAnimeWatchlist;
 
 class PrivateAnimeWatchlistController extends Controller
 {
@@ -25,12 +26,13 @@ class PrivateAnimeWatchlistController extends Controller
      */
     public function index(User $user, Watchlist $watchlist)
     {
+        $this->authorize('viewAny', [PrivateAnimeWatchlist::class, $watchlist]);
         $watchlist->load('privateAnimes');
         $paginatedWatchlistAnimes = $watchlist->privateAnimes()->paginate(10);
 
         return $this->customResponse->success([
             'watchlist' => new WatchlistResource($watchlist),
-            'animes'   => new PrivateAnimeWatchlistCollection($paginatedWatchlistAnimes),
+            'animes'    => new PrivateAnimeWatchlistCollection($paginatedWatchlistAnimes),
         ]);
     }
 
@@ -42,6 +44,7 @@ class PrivateAnimeWatchlistController extends Controller
         User $user,
         Watchlist $watchlist
     ) {
+        $this->authorize('create', [PrivateAnimeWatchlist::class, $watchlist]);
         $watchlist->privateAnimes()->attach($request->anime_id);
 
         return $this->customResponse->createdResponse();
@@ -52,6 +55,7 @@ class PrivateAnimeWatchlistController extends Controller
      */
     public function destroy(User $user, Watchlist $watchlist, PrivateAnime $privateAnime)
     {
+        $this->authorize('delete', [PrivateAnimeWatchlist::class, $watchlist]);
         $watchlist->privateAnimes()->detach($privateAnime);
 
         return $this->customResponse->deletedResponse();
