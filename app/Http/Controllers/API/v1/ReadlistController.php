@@ -21,6 +21,7 @@ class ReadlistController extends Controller
 
     public function __construct(CustomResponse $customResponse)
     {
+        $this->authorizeResource(Readlist::class);
         $this->customResponse = $customResponse;
     }
 

@@ -14,6 +14,10 @@ use App\Models\PrivateAnimeSeason;
 use App\Policies\v1\PrivateAnimeSeasonPolicy;
 use App\Models\PrivateGenre;
 use App\Policies\v1\PrivateGenrePolicy;
+use App\Models\Watchlist;
+use App\Policies\v1\WatchlistPolicy;
+use App\Models\Readlist;
+use App\Policies\v1\ReadlistPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -27,7 +31,9 @@ class AuthServiceProvider extends ServiceProvider
         PrivateAnime::class => PrivateAnimePolicy::class,
         PrivateGenre::class => PrivateGenrePolicy::class,
         PrivateAnimeMovie::class => PrivateAnimeMoviePolicy::class,
-        PrivateAnimeSeason::class => PrivateAnimeSeasonPolicy::class
+        PrivateAnimeSeason::class => PrivateAnimeSeasonPolicy::class,
+        Watchlist::class => WatchlistPolicy::class,
+        Readlist::class => ReadlistPolicy::class
     ];
 
     /**

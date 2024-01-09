@@ -15,7 +15,6 @@ use App\Http\Controllers\API\v1\PrivateAnimeWatchStatusController;
 use App\Http\Controllers\API\v1\PrivateMangaReadStatusController;
 use App\Http\Middleware\CheckPrivateUserRoute;
 
-
 // Authenticated Routes
 Route::middleware(['auth:sanctum'])->group(function () {
 

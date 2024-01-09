@@ -21,6 +21,7 @@ class WatchlistController extends Controller
 
     public function __construct(CustomResponse $customResponse)
     {
+        $this->authorizeResource(Watchlist::class);
         $this->customResponse = $customResponse;
     }
 
