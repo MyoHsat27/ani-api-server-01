@@ -2,6 +2,7 @@
 
 namespace App\Policies\v1;
 
+use App\Models\PrivateManga;
 use App\Models\PrivateMangaReadlist;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -28,8 +29,8 @@ class PrivateMangaReadlistPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Readlist $readlist): Response
+    public function delete(User $user, Readlist $readlist, PrivateManga $privateManga): Response
     {
-        return $user->id === $readlist->user_id ? Response::allow() : Response::denyAsNotFound();
+        return $user->id === $readlist->user_id && $privateManga->user_id === $user->id ? Response::allow() : Response::denyAsNotFound();
     }
 }

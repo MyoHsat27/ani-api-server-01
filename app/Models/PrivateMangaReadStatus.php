@@ -18,7 +18,7 @@ class PrivateMangaReadStatus extends Model
 
     protected $fillable = [
         'chapter',
-        'favourite_id',
+        'favourite_level_id',
         'watch_status_id',
         'private_manga_id',
         'user_id',

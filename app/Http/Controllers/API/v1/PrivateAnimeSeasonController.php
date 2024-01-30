@@ -11,85 +11,90 @@ use App\Http\Response\CustomResponse;
 use App\Models\PrivateAnime;
 use App\Models\PrivateAnimeSeason;
 use App\Models\User;
+use App\Repositories\FilterRepository;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class PrivateAnimeSeasonController extends Controller
 {
-    protected CustomResponse $customResponse;
+   /**
+    * @throws AuthorizationException
+    */
+   public function index(FilterRepository $filterRepository, Request $request, User $user, PrivateAnime $privateAnime): JsonResponse
+   {
+      $this->authorize('viewAny', [PrivateAnimeSeason::class, $privateAnime]);
 
-    public function __construct(CustomResponse $customResponse)
-    {
-        $this->customResponse = $customResponse;
-    }
+      $seasons = $filterRepository->paginate($privateAnime->seasons()->with(['releaseStatus', 'privateAnime'])->getQuery(), $request);
 
-    public function index(User $user, PrivateAnime $privateAnime)
-    {
-        $this->authorize('viewAny', [PrivateAnimeSeason::class, $privateAnime]);
+      return CustomResponse::success(new PrivateAnimeSeasonCollection($seasons));
+   }
 
-        return $this->customResponse->success(new PrivateAnimeSeasonCollection($privateAnime->seasons
-            )
-        );
-    }
+   /**
+    * Store a newly created resource in storage.
+    * @throws AuthorizationException
+    */
+   public function store(StorePrivateAnimeSeasonRequest $request,
+                         User                           $user,
+                         PrivateAnime                   $privateAnime): JsonResponse
+   {
+      $this->authorize('create', [PrivateAnimeSeason::class, $privateAnime]);
+      PrivateAnimeSeason::create([
+         'name' => $request->name,
+         'slug' => Str::slug($request->name),
+         'description' => $request->description,
+         'episode' => $request->episode,
+         'release_status_id' => $request->release_status_id,
+         'private_anime_id' => $privateAnime->id,
+      ]);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorePrivateAnimeSeasonRequest $request,
-        User $user,
-        PrivateAnime $privateAnime)
-    {
-        $this->authorize('create', [PrivateAnimeSeason::class, $privateAnime]);
-        PrivateAnimeSeason::create([
-            'name'              => $request->name,
-            'slug'              => Str::slug($request->name),
-            'description'       => $request->description,
-            'episode'           => $request->episode,
-            'release_status_id' => $request->release_status_id,
-            'private_anime_id'  => $request->private_anime_id,
-        ]);
+      return CustomResponse::createdResponse();
+   }
 
-        return $this->customResponse->createdResponse();
-    }
+   /**
+    * Display the specified resource.
+    * @throws AuthorizationException
+    */
+   public function show(User $user, PrivateAnime $privateAnime, PrivateAnimeSeason $season): JsonResponse
+   {
+      $this->authorize('view', [PrivateAnimeSeason::class, $privateAnime, $season]);
+      $season->load(['releaseStatus', 'privateAnime']);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user, PrivateAnime $privateAnime, PrivateAnimeSeason $season)
-    {
-        $this->authorize('view', [PrivateAnimeSeason::class, $privateAnime]);
+      return CustomResponse::success(PrivateAnimeSeasonResource::make($season));
+   }
 
-        return $this->customResponse->success(PrivateAnimeSeasonResource::make($season));
-    }
+   /**
+    * Update the specified resource in storage.
+    * @throws AuthorizationException
+    */
+   public function update(UpdatePrivateAnimeSeasonRequest $request,
+                          User                            $user,
+                          PrivateAnime                    $privateAnime,
+                          PrivateAnimeSeason              $season): JsonResponse
+   {
+      $this->authorize('update', [PrivateAnimeSeason::class, $privateAnime, $season]);
+      $season->update([
+         'name' => $request->name,
+         'slug' => Str::slug($request->name),
+         'description' => $request->description,
+         'episode' => $request->episode,
+         'release_status_id' => $request->release_status_id,
+         'private_anime_id' => $privateAnime->id,
+      ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePrivateAnimeSeasonRequest $request,
-        User $user,
-        PrivateAnime $privateAnime,
-        PrivateAnimeSeason $season)
-    {
-        $this->authorize('update', [PrivateAnimeSeason::class, $privateAnime]);
-        $season->update([
-            'name'              => $request->name,
-            'slug'              => Str::slug($request->name),
-            'description'       => $request->description,
-            'episode'           => $request->episode,
-            'release_status_id' => $request->release_status_id,
-            'private_anime_id'  => $request->private_anime_id,
-        ]);
+      return CustomResponse::updatedResponse();
+   }
 
-        return $this->customResponse->updatedResponse();
-    }
+   /**
+    * Remove the specified resource from storage.
+    * @throws AuthorizationException
+    */
+   public function destroy(User $user, PrivateAnime $privateAnime, PrivateAnimeSeason $season): JsonResponse
+   {
+      $this->authorize('delete', [PrivateAnimeSeason::class, $privateAnime, $season]);
+      $season->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user, PrivateAnime $privateAnime, PrivateAnimeSeason $season)
-    {
-        $this->authorize('delete', [PrivateAnimeSeason::class, $privateAnime]);
-        $season->delete();
-
-        return $this->customResponse->deletedResponse();
-    }
+      return CustomResponse::deletedResponse();
+   }
 }

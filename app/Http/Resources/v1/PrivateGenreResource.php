@@ -19,7 +19,7 @@ class PrivateGenreResource extends JsonResource
             'name'        => $this->name,
             'slug'        => $this->slug,
             'description' => $this->description,
-            'user'        => $this->user->username,
+            'createdBy'        => UserResource::make($this->user),
         ];
     }
 }

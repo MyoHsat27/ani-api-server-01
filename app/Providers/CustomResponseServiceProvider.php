@@ -2,18 +2,19 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use App\Http\Response\CustomResponse;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\ServiceProvider;
 
-class CustomResponseProvider extends ServiceProvider
+class CustomResponseServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
      */
     public function register(): void
     {
-        $this->app->singleton('customResponse', function ($app) {
-            return new CustomResponse();
+        $this->app->singleton(CustomResponse::class, function (Application $app) {
+           return new CustomResponse();
         });
     }
 

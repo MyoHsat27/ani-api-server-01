@@ -2,6 +2,7 @@
 
 namespace App\Policies\v1;
 
+use App\Models\PrivateAnime;
 use App\Models\PrivateAnimeWatchlist;
 use App\Models\User;
 use App\Models\Watchlist;
@@ -28,8 +29,8 @@ class PrivateAnimeWatchlistPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Watchlist $watchlist): Response
+    public function delete(User $user, Watchlist $watchlist, PrivateAnime $privateAnime): Response
     {
-        return $user->id === $watchlist->user_id ? Response::allow() : Response::denyAsNotFound();
+        return $user->id === $watchlist->user_id && $privateAnime->user_id === $user->id ? Response::allow() : Response::denyAsNotFound();
     }
 }

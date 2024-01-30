@@ -10,109 +10,112 @@ use App\Http\Resources\v1\PrivateAnimeCollection;
 use App\Http\Resources\v1\PrivateAnimeResource;
 use App\Http\Response\CustomResponse;
 use App\Models\PrivateAnime;
-use Illuminate\Support\Str;
 use App\Models\User;
 use App\Repositories\FilterRepository;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class PrivateAnimeController extends Controller
 {
 
-    protected PrivateAnimeGenreController $privateAnimeGenreController;
-    protected CustomResponse $customResponse;
-    /**
-     * PrivateMangaController constructor
-     */
-    public function __construct( CustomResponse $customResponse,
-        PrivateAnimeGenreController $privateAnimeGenreController)
-    {
-        $this->authorizeResource(PrivateAnime::class);
-        $this->customResponse = $customResponse;
-        $this->privateAnimeGenreController = $privateAnimeGenreController;
-    }
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(FilterRepository $filterRepository,PrivateAnimeFilterRequest $request,User $user)
-    {
-         // Get the initial builder with search filtering
-         $query = $filterRepository->filterBySearchKeyword($user,
+   protected PrivateAnimeGenreController $privateAnimeGenreController;
+
+   /**
+    * PrivateMangaController constructor
+    */
+   public function __construct(PrivateAnimeGenreController $privateAnimeGenreController)
+   {
+      $this->authorizeResource(PrivateAnime::class);
+      $this->privateAnimeGenreController = $privateAnimeGenreController;
+   }
+
+   /**
+    * Display a listing of the resource.
+    */
+   public function index(FilterRepository $filterRepository, PrivateAnimeFilterRequest $request, User $user): JsonResponse
+   {
+      // Get the initial builder with search filtering
+      $query = $filterRepository->filterBySearchKeyword($user,
          PrivateAnime::class,
          'privateAnimes',
+         ['privateGenres.user', 'user', 'releaseStatus'],
          $request->input('search')
-     );
+      );
 
-     // Apply Additional filters
-     $filters = [
+      // Apply Additional filters
+      $filters = [
          'releaseStatus' => $request->input('release-status'),
-     ];
-     $filteredResult = $filterRepository->applyFilters($query, $filters);
-     $privateAnimes = $filterRepository->paginate($filteredResult,$request);
+      ];
 
-     return $this->customResponse->success(new PrivateAnimeCollection($privateAnimes));
-    }
+      $filteredResult = $filterRepository->applyFilters($query, $filters);
+      $privateAnimes = $filterRepository->paginate($filteredResult, $request);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorePrivateAnimeRequest $request)
-    {
-        $privateAnime = PrivateAnime::create([
-            'name'              => $request->name,
-            'slug'              => Str::slug($request->name),
-            'description'       => $request->description,
-            'alt_name'          => $request->alt_name,
-            'resource_url'      => $request->resource_url,
-            'image_url'         => $request->image_url,
-            'release_status_id' => $request->release_status_id,
-            'user_id'           => Auth::id(),
-        ]);
-        $this->privateAnimeGenreController->storeMultiple($request, $privateAnime);
+      return CustomResponse::success(new PrivateAnimeCollection($privateAnimes));
+   }
 
-        return $this->customResponse->createdResponse();
-    }
+   /**
+    * Store a newly created resource in storage.
+    */
+   public function store(StorePrivateAnimeRequest $request): JsonResponse
+   {
+      $privateAnime = PrivateAnime::create([
+         'name' => $request->name,
+         'slug' => Str::slug($request->name),
+         'description' => $request->description,
+         'alt_name' => $request->alt_name,
+         'resource_url' => $request->resource_url,
+         'image_url' => $request->image_url,
+         'release_status_id' => $request->release_status_id,
+         'user_id' => Auth::id(),
+      ]);
+      $this->privateAnimeGenreController->storeMultiple($request, $privateAnime);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user, PrivateAnime $privateAnime)
-    {
-        return $this->customResponse->success(PrivateAnimeResource::make($privateAnime));
-    }
+      return CustomResponse::createdResponse();
+   }
 
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePrivateAnimeRequest $request,
-    User $user,
-    PrivateAnime $privateAnime)
-{
-    $privateAnime->update([
-        'name'              => $request->name,
-        'slug'              => Str::slug($request->name),
-        'description'       => $request->description,
-        'alt_name'          => $request->alt_name,
-        'resource_url'      => $request->resource_url,
-        'image_url'         => $request->image_url,
-        'release_status_id' => $request->release_status_id,
-        'user_id'           => Auth::id(),
-    ]);
-
-   return $this->customResponse->updatedResponse();
+   /**
+    * Display the specified resource.
+    */
+   public function show(User $user, PrivateAnime $privateAnime): JsonResponse
+   {
+      $privateAnime->load(['privateGenres.user', 'releaseStatus', 'user']);
+      return CustomResponse::success(PrivateAnimeResource::make($privateAnime));
+   }
 
 
-}
+   /**
+    * Update the specified resource in storage.
+    */
+   public function update(UpdatePrivateAnimeRequest $request,
+                          User                      $user,
+                          PrivateAnime              $privateAnime): JsonResponse
+   {
+      $privateAnime->update([
+         'name' => $request->name,
+         'slug' => Str::slug($request->name),
+         'description' => $request->description,
+         'alt_name' => $request->alt_name,
+         'resource_url' => $request->resource_url,
+         'image_url' => $request->image_url,
+         'release_status_id' => $request->release_status_id,
+         'user_id' => Auth::id(),
+      ]);
+      $this->privateAnimeGenreController->updateMultiple($request, $privateAnime);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user, PrivateAnime $privateAnime)
-    {
-        $this->privateAnimeGenreController->destroyMultiple($privateAnime);
-        $privateAnime->delete();
+      return CustomResponse::updatedResponse();
 
-        return $this->customResponse->deletedResponse();
-    }
+
+   }
+
+   /**
+    * Remove the specified resource from storage.
+    */
+   public function destroy(User $user, PrivateAnime $privateAnime): JsonResponse
+   {
+      $this->privateAnimeGenreController->destroyMultiple($privateAnime);
+      $privateAnime->delete();
+
+      return CustomResponse::deletedResponse();
+   }
 }

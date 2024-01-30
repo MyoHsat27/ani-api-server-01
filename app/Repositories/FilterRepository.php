@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Watchlist;
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\Scout\Builder as ScoutBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -42,12 +43,13 @@ class FilterRepository
     public function filterBySearchKeyword(User $user,
         $modelClass,
         string $relationName,
+        array $relationships,
         ?string $search = null): Builder|ScoutBuilder
     {
         $model = new $modelClass;
 
         if ($search) {
-            // When Scout is used to perform the search however it returns Scout Builder
+            // When Scout is used to perform the search it returns Scout Builder
             // which limits our ability to apply additional Eloquent-specific methods and conditions for filtering.
 
             // To overcome this limitation, we first retrieve array of Models IDs that match the search keyword using Scout.
@@ -57,12 +59,12 @@ class FilterRepository
             // Now, we retrieve the actual models based on the IDs obtained
             // This step is crucial as it transforms the Scout Builder into an Eloquent Builder,
             // allowing us to apply additional Eloquent methods, conditions, and operands.
-            return $model->whereIn('id', $searchMatchingIds);
+            return $model->whereIn('id', $searchMatchingIds)->with($relationships);
         }
 
         // If no search keyword is provided, we simply retrieve the user's model relation.
         // This avoids unnecessary Scout queries when not searching.
-        return $user->{$relationName}()->getQuery();
+        return $user->{$relationName}()->with($relationships)->getQuery();
     }
 
     /**

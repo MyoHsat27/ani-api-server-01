@@ -21,7 +21,7 @@ class PrivateGenrePolicy
      */
     public function view(User $user, PrivateGenre $genre): Response
     {
-        return $user->id === $genre->user_id ? Response::allow() : Response::denyAsNotFound();
+       return $user->id === $genre->user_id ? Response::allow() : Response::denyAsNotFound();
     }
 
     /**

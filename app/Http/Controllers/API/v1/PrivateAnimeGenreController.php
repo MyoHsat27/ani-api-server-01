@@ -8,76 +8,71 @@ use App\Http\Response\CustomResponse;
 use App\Models\PrivateAnime;
 use App\Models\PrivateGenre;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class PrivateAnimeGenreController extends Controller
 {
-    protected CustomResponse $customResponse;
+   /**
+    * Display a listing of the resource.
+    */
+   public function index(User $user, PrivateAnime $privateAnime): JsonResponse
+   {
+      $privateGenres = $privateAnime->privateGenres()->with(['private_animes', 'user'])->get();
+      return CustomResponse::success(PrivateGenreResource::collection($privateGenres));
+   }
 
+   /**
+    * Store multiple genres in a manga.
+    */
+   public function storeMultiple(Request $request, PrivateAnime $anime): JsonResponse
+   {
+      $genres = array_unique($request->input('genres', []));
+      $anime->privateGenres()->attach($genres);
 
-    public function __construct(CustomResponse $customResponse)
-    {
-        $this->customResponse = $customResponse;
-    }
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(User $user, PrivateAnime $privateAnime)
-    {
-        return $this->customResponse->success(PrivateGenreResource::collection($privateAnime->privateGenres));
-    }
+      return CustomResponse::createdResponse();
+   }
 
-    /**
-     * Store multiple genres in a manga.
-     */
-    public function storeMultiple(Request $request, PrivateAnime $anime)
-    {
-        $genres = array_unique($request->input('genres', []));
-        $anime->privateGenres()->attach($genres);
+   /**
+    * Update multiple genres in a manga.
+    */
+   public function updateMultiple(Request $request, PrivateAnime $anime): JsonResponse
+   {
+      $anime->privateGenres()->detach();
 
-        return $this->customResponse->createdResponse();
-    }
-    
-    /**
-     * Update multiple genres in a manga.
-     */
-    public function updateMultiple(Request $request, PrivateAnime $anime)
-    {
-        $anime->privateGenres()->detach();
+      $updatedGenres = array_unique($request->input('genres', []));
+      $anime->privateGenres()->attach($updatedGenres);
 
-        $updatedGenres = array_unique($request->input('genres', []));
-        $anime->privateGenres()->attach($updatedGenres);
+      return CustomResponse::updatedResponse();
+   }
 
-        return $this->customResponse->updatedResponse();
-    }
+   /**
+    * Remove all genres from a manga.
+    */
+   public function destroyMultiple(PrivateAnime $anime): JsonResponse
+   {
+      $anime->privateGenres()->detach();
 
-    /**
-     * Remove all genres from a manga.
-     */
-    public function destroyMultiple(PrivateAnime $anime)
-    {
-        $anime->privateGenres()->detach();
+      return CustomResponse::deletedResponse();
+   }
 
-        return $this->customResponse->deletedResponse();
-    }
+   /**
+    * Store a single genre in a manga.
+    */
+   public function storeSingle(Request $request, PrivateAnime $anime): JsonResponse
+   {
+      $anime->privateGenres()->attach($request->genre_id);
 
-    /**
-     * Store a single genre in a manga.
-     */
-    public function storeSingle(Request $request, PrivateAnime $anime)
-    {
-        $anime->privateGenres()->attach($request->genre_id);
+      return CustomResponse::createdResponse();
+   }
 
-        return $this->customResponse->createdResponse();
-    }
+   /**
+    * Remove the specified genre from a manga.
+    */
+   public function destroySingle(PrivateAnime $anime, PrivateGenre $genre): JsonResponse
+   {
+      $anime->privateGenres()->detach($genre->id);
 
-    /**
-     * Remove the specified genre from a manga.
-     */
-    public function destroySingle(PrivateAnime $anime, PrivateGenre $genre)
-    {
-        $anime->privateGenres()->detach($genre->id);
-
-        return $this->customResponse->deletedResponse();
-    }
+      return CustomResponse::deletedResponse();
+   }
 }

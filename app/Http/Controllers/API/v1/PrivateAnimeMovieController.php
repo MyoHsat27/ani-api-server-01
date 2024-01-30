@@ -11,85 +11,89 @@ use App\Http\Response\CustomResponse;
 use App\Models\PrivateAnime;
 use App\Models\PrivateAnimeMovie;
 use App\Models\User;
+use App\Repositories\FilterRepository;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class PrivateAnimeMovieController extends Controller
 {
-    protected CustomResponse $customResponse;
 
-    public function __construct(CustomResponse $customResponse)
-    {
-        $this->customResponse = $customResponse;
-    }
+   public function index(FilterRepository $filterRepository, Request $request, User $user, PrivateAnime $privateAnime): JsonResponse
+   {
+      $this->authorize('viewAny', [PrivateAnimeMovie::class, $privateAnime]);
 
-    public function index(User $user, PrivateAnime $privateAnime)
-    {
-        $this->authorize('viewAny', [PrivateAnimeMovie::class, $privateAnime]);
+      $movies = $filterRepository->paginate($privateAnime->movies()->with(['releaseStatus', 'privateAnime'])->getQuery(), $request);
 
-        return $this->customResponse->success(new PrivateAnimeMovieCollection($privateAnime->movies)
-        );
-    }
+      return CustomResponse::success(new PrivateAnimeMovieCollection($movies));
+   }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorePrivateAnimeMovieRequest $request,
-        User $user,
-        PrivateAnime $privateAnime)
-    {
-        $this->authorize('create', [PrivateAnimeMovie::class, $privateAnime]);
-        PrivateAnimeMovie::create([
-            'name'              => $request->name,
-            'slug'              => Str::slug($request->name),
-            'description'       => $request->description,
-            'alt_name'          => $request->alt_name,
-            'release_status_id' => $request->release_status_id,
-            'private_anime_id'  => $privateAnime->id,
-        ]);
+   /**
+    * Store a newly created resource in storage.
+    * @throws AuthorizationException
+    */
+   public function store(StorePrivateAnimeMovieRequest $request,
+                         User                          $user,
+                         PrivateAnime                  $privateAnime): JsonResponse
+   {
+      $this->authorize('create', [PrivateAnimeMovie::class, $privateAnime]);
+      PrivateAnimeMovie::create([
+         'name' => $request->name,
+         'slug' => Str::slug($request->name),
+         'description' => $request->description,
+         'alt_name' => $request->alt_name,
+         'release_status_id' => $request->release_status_id,
+         'private_anime_id' => $privateAnime->id,
+      ]);
 
-        return $this->customResponse->createdResponse();
-    }
+      return CustomResponse::createdResponse();
+   }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user, PrivateAnime $privateAnime, PrivateAnimeMovie $movie)
-    {
-        $this->authorize('view', [PrivateAnimeMovie::class, $privateAnime]);
+   /**
+    * Display the specified resource.
+    * @throws AuthorizationException
+    */
+   public function show(User $user, PrivateAnime $privateAnime, PrivateAnimeMovie $movie): JsonResponse
+   {
+      $this->authorize('view', [PrivateAnimeMovie::class, $privateAnime, $movie]);
+      $movie->load(['releaseStatus', 'privateAnime']);
 
-        return $this->customResponse->success(PrivateAnimeMovieResource::make($movie));
-    }
+      return CustomResponse::success(PrivateAnimeMovieResource::make($movie));
+   }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePrivateAnimeMovieRequest $request,
-        User $user,
-        PrivateAnime $privateAnime,
-        PrivateAnimeMovie $movie)
-    {
-        $this->authorize('update', [PrivateAnimeMovie::class, $privateAnime]);
-        $movie->update([
-            'name'              => $request->name,
-            'slug'              => Str::slug($request->name),
-            'description'       => $request->description,
-            'alt_name'          => $request->alt_name,
-            'release_status_id' => $request->release_status_id,
-            'private_anime_id'  => $request->private_anime_id,
-        ]);
+   /**
+    * Update the specified resource in storage.
+    * @throws AuthorizationException
+    */
+   public function update(UpdatePrivateAnimeMovieRequest $request,
+                          User                           $user,
+                          PrivateAnime                   $privateAnime,
+                          PrivateAnimeMovie              $movie): JsonResponse
+   {
+      $this->authorize('update', [PrivateAnimeMovie::class, $privateAnime, $movie]);
+      $movie->update([
+         'name' => $request->name,
+         'slug' => Str::slug($request->name),
+         'description' => $request->description,
+         'alt_name' => $request->alt_name,
+         'release_status_id' => $request->release_status_id,
+         'private_anime_id' => $privateAnime->id,
+      ]);
 
-        return $this->customResponse->updatedResponse();
-    }
+      return CustomResponse::updatedResponse();
+   }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user, PrivateAnime $privateAnime, PrivateAnimeMovie $movie)
-    {
-        $this->authorize('delete', [PrivateAnimeMovie::class, $privateAnime]);
+   /**
+    * Remove the specified resource from storage.
+    * @throws AuthorizationException
+    */
+   public function destroy(User $user, PrivateAnime $privateAnime, PrivateAnimeMovie $movie): JsonResponse
+   {
+      $this->authorize('delete', [PrivateAnimeMovie::class, $privateAnime, $movie]);
 
-        $movie->delete();
+      $movie->delete();
 
-        return $this->customResponse->deletedResponse();
-    }
+      return CustomResponse::deletedResponse();
+   }
 }

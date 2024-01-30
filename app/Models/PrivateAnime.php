@@ -28,6 +28,7 @@ class PrivateAnime extends Model
         'release_status_id',
         'user_id',
     ];
+
     /**
      * The attributes that should be cast.
      *
@@ -73,7 +74,7 @@ class PrivateAnime extends Model
 
     public function watchStatuses(): HasMany
     {
-        return $this->hasMany(PrivateAnimeWatchStatus::class, 'private_anime_watch_statuses');
+        return $this->hasMany(PrivateAnimeWatchStatus::class, 'private_anime_id');
     }
 
     public function seasons(): HasMany

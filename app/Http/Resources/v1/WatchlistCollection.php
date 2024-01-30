@@ -5,7 +5,7 @@ namespace App\Http\Resources\v1;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class WatchlistCollection extends ResourceCollection
+class WatchlistCollection extends BaseResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -14,8 +14,9 @@ class WatchlistCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
-        return [
-            'watchlists' => WatchlistResource::collection($this->collection)
-        ];
+       $response = [
+          'watchlists' => WatchlistResource::collection($this->collection)
+       ];
+        return  $this->addPaginationIfRequested($response, $request);
     }
 }

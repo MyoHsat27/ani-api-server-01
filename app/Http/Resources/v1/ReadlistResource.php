@@ -7,19 +7,19 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ReadlistResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(Request $request): array
-    {
-        return [
-            'id'          => $this->id,
-            'name'        => $this->name,
-            'slug'        => $this->slug,
-            'description' => $this->description,
-            'createdBy'   => $this->user->username,
-        ];
-    }
+   /**
+    * Transform the resource into an array.
+    *
+    * @return array<string, mixed>
+    */
+   public function toArray(Request $request): array
+   {
+      return [
+         'id' => $this->id,
+         'name' => $this->name,
+         'slug' => $this->slug,
+         'description' => $this->description,
+         'createdBy' => UserResource::make($this->user),
+      ];
+   }
 }

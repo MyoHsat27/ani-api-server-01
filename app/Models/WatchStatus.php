@@ -30,11 +30,11 @@ class WatchStatus extends Model
 
     public function privateAnimeWatchStatuses(): HasMany
     {
-        return $this->hasMany(PrivateAnimeWatchStatus::class, 'private_anime_watch_statuses');
+        return $this->hasMany(PrivateAnimeWatchStatus::class, 'private_anime_id');
     }
 
     public function privateMangaReadStatuses(): HasMany
     {
-        return $this->hasMany(PrivateMangaReadStatus::class, 'private_manga_read_statuses');
+        return $this->hasMany(PrivateMangaReadStatus::class, 'private_manga_id');
     }
 }

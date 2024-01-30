@@ -72,7 +72,7 @@ class PrivateManga extends Model
 
     public function readStatuses(): HasMany
     {
-        return $this->hasMany(PrivateMangaReadStatus::class, 'private_manga_read_statuses');
+        return $this->hasMany(PrivateMangaReadStatus::class, 'private_manga_id');
     }
 
     public function releaseStatus(): BelongsTo

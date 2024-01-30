@@ -8,7 +8,6 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class PrivateAnimeSeasonCollection extends BaseResourceCollection
 {
-    use PaginatableTrait;
     /**
      * Transform the resource collection into an array.
      *

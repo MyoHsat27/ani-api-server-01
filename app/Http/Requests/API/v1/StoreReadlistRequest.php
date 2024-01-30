@@ -34,7 +34,7 @@ class StoreReadlistRequest extends FormRequest
                     return $query->where('user_id', Auth::id());
                 }),
             ],
-            'description' => 'required|max:500|string',
+            'description' => 'max:500|string',
         ];
     }
 }

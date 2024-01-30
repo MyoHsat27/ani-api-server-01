@@ -19,7 +19,7 @@ class WatchlistResource extends JsonResource
             'name'           => $this->name,
             'slug'           => $this->slug,
             'description'    => $this->description,
-            'createdBy'      => $this->user->username,
+            'createdBy'      => UserResource::make($this->user),
         ];
     }
 }

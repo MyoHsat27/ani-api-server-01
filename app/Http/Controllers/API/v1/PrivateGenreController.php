@@ -3,84 +3,82 @@
 namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
-use App\Models\PrivateGenre;
 use App\Http\Requests\API\v1\StorePrivateGenreRequest;
-use App\Http\Resources\v1\PrivateGenreResource;
 use App\Http\Requests\API\v1\UpdatePrivateGenreRequest;
-use App\Models\User;
 use App\Http\Resources\v1\PrivateGenreCollection;
+use App\Http\Resources\v1\PrivateGenreResource;
 use App\Http\Response\CustomResponse;
+use App\Models\PrivateGenre;
+use App\Models\User;
 use App\Repositories\FilterRepository;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class PrivateGenreController extends Controller
 {
-    protected CustomResponse $customResponse;
+   public function __construct()
+   {
+      $this->authorizeResource(PrivateGenre::class);
+   }
 
-    public function __construct(CustomResponse $customResponse)
-    {
-        $this->authorizeResource(PrivateGenre::class);
-        $this->customResponse = $customResponse;
-    }
+   /**
+    * Display a listing of the resource.
+    */
+   public function index(FilterRepository $filterRepository, User $user, Request $request): JsonResponse
+   {
+      $privateGenres = $filterRepository->paginate($user->privateGenres()->with(['user'])->getQuery(), $request);
+      return CustomResponse::success(new PrivateGenreCollection($privateGenres));
+   }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(FilterRepository $filterRepository, User $user, Request $request)
-    {
-        $privateGenres = $filterRepository->paginate($user->privateGenres()->getQuery(), $request);
-        return $this->customResponse->success(new PrivateGenreCollection($privateGenres));
-    }
+   /**
+    * Store a newly created resource in storage.
+    */
+   public function store(User $user, StorePrivateGenreRequest $request): JsonResponse
+   {
+      PrivateGenre::create([
+         'name' => $request->name,
+         'slug' => Str::slug($request->name),
+         'description' => $request->description,
+         'user_id' => Auth::id(),
+      ]);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(User $user, StorePrivateGenreRequest $request)
-    {
-        PrivateGenre::create([
-            'name'        => $request->name,
-            'slug'        => Str::slug($request->name),
-            'description' => $request->description,
-            'user_id'     => Auth::id(),
-        ]);
+      return CustomResponse::createdResponse();
+   }
 
-        return $this->customResponse->createdResponse();
-    }
+   /**
+    * Display the specified resource.
+    */
+   public function show(User $user, PrivateGenre $privateGenre): JsonResponse
+   {
+      return CustomResponse::success(PrivateGenreResource::make($privateGenre));
+   }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user, PrivateGenre $privateGenre)
-    {
-        return $this->customResponse->success(PrivateGenreResource::make($privateGenre));
-    }
+   /**
+    * Update the specified resource in storage.
+    */
+   public function update(User                      $user,
+                          UpdatePrivateGenreRequest $request,
+                          PrivateGenre              $privateGenre): JsonResponse
+   {
+      $privateGenre->update([
+         'name' => $request->name,
+         'slug' => Str::slug($request->name),
+         'description' => $request->description,
+         'user_id' => Auth::id(),
+      ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(User $user,
-        UpdatePrivateGenreRequest $request,
-        PrivateGenre $privateGenre)
-    {
-        $privateGenre->update([
-            'name'        => $request->name,
-            'slug'        => Str::slug($request->name),
-            'description' => $request->description,
-            'user_id'     => Auth::id(),
-        ]);
+      return CustomResponse::updatedResponse();
+   }
 
-        return $this->customResponse->updatedResponse();
-    }
+   /**
+    * Remove the specified resource from storage.
+    */
+   public function destroy(User $user, PrivateGenre $privateGenre): JsonResponse
+   {
+      $privateGenre->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user, PrivateGenre $privateGenre)
-    {
-        $privateGenre->delete();
-
-        return $this->customResponse->deletedResponse();
-    }
+      return CustomResponse::deletedResponse();
+   }
 }

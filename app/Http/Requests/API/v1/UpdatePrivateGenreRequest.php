@@ -4,6 +4,8 @@ namespace App\Http\Requests\API\v1;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class UpdatePrivateGenreRequest extends FormRequest
 {
@@ -22,8 +24,17 @@ class UpdatePrivateGenreRequest extends FormRequest
      */
     public function rules(): array
     {
+       $currentGenreId = $this->route('private_genre')->id;
         return [
-            'name'        => 'string|max:255',
+           'name' => [
+              'required',
+              'string',
+              'max:50',
+              'min:3',
+              Rule::unique('private_genres')->where(function ($query) {
+                 return $query->where('user_id', Auth::id());
+              })->ignore($currentGenreId)
+           ],
             'description' => 'string|max:1000',
         ];
     }

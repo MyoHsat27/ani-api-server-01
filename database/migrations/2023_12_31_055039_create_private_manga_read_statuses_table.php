@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('private_manga_read_statuses', function (Blueprint $table) {
             $table->id();
             $table->float("chapter");
-            $table->foreignId('favourite_level_id')->constrained();
+            $table->foreignId('favourite_level_id')->nullable()->constrained();
             $table->foreignId('watch_status_id')->constrained();
             $table->foreignId('private_manga_id')->constrained();
             $table->foreignId('user_id')->constrained();
