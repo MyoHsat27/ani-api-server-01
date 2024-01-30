@@ -19,7 +19,9 @@ class ReadlistResource extends JsonResource
          'name' => $this->name,
          'slug' => $this->slug,
          'description' => $this->description,
-         'createdBy' => UserResource::make($this->user),
+         'created_by' => UserResource::make($this->user),
+         'created_at' => $this->created_at,
+         'updated_at' => $this->updated_at,
       ];
    }
 }

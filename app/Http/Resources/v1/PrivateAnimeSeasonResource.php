@@ -7,21 +7,23 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class PrivateAnimeSeasonResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(Request $request): array
-    {
-        return [
-            'id'            => $this->id,
-            'name'          => $this->name,
-            'slug'          => $this->slug,
-            'episode'       => $this->episode,
-            'description'   => $this->description,
-            'release_status' => $this->releaseStatus->status,
-            'private_anime'  => $this->privateAnime->name,
-        ];
-    }
+   /**
+    * Transform the resource into an array.
+    *
+    * @return array<string, mixed>
+    */
+   public function toArray(Request $request): array
+   {
+      return [
+         'id' => $this->id,
+         'name' => $this->name,
+         'slug' => $this->slug,
+         'episode' => $this->episode,
+         'description' => $this->description,
+         'release_status' => $this->releaseStatus->status,
+         'private_anime' => $this->privateAnime->name,
+         'created_at' => $this->created_at,
+         'updated_at' => $this->updated_at,
+      ];
+   }
 }

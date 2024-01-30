@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\v1\UpdatePrivateAnimeWatchStatusRequest;
-use App\Http\Resources\PrivateAnimeWatchStatusResource;
+use App\Http\Resources\v1\PrivateAnimeWatchStatusResource;
 use App\Http\Response\CustomResponse;
 use App\Models\PrivateAnime;
 use App\Models\PrivateAnimeWatchStatus;

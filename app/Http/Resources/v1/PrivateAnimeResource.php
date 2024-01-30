@@ -24,7 +24,9 @@ class PrivateAnimeResource extends JsonResource
          'image_url' => $this->image_url,
          'release_status' => $this->releaseStatus->status,
          'genres' => PrivateGenreResource::collection($this->privateGenres),
-         'createdBy' => UserResource::make($this->user),
+         'created_by' => UserResource::make($this->user),
+         'created_at' => $this->created_at,
+         'updated_at' => $this->updated_at,
       ];
    }
 }

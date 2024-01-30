@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\v1\UpdatePrivateMangaReadStatusRequest;
-use App\Http\Resources\PrivateMangaReadStatusResource;
+use App\Http\Resources\v1\PrivateMangaReadStatusResource;
 use App\Http\Response\CustomResponse;
 use App\Models\PrivateManga;
 use App\Models\PrivateMangaReadStatus;

@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\v1;
 
-use App\Http\Resources\v1\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -23,8 +22,8 @@ class PrivateAnimeWatchStatusResource extends JsonResource
          'favourite_level' => $this->favouriteLevel ? $this->favouriteLevel->level : 'none',
          'watch_status'  => $this->watchStatus->status,
          'created_by' => UserResource::make($this->user),
-         'created_at' => $this->created_at->format('d|M|Y H:i:s'),
-         'updated_at' => $this->updated_at->format('d|M|Y H:i:s'),
+         'created_at' => $this->created_at,
+         'updated_at' => $this->updated_at,
       ];
    }
 }
