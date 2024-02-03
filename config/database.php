@@ -45,11 +45,10 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'url' => env('DATABASE_URL'),
             'host' => env('RDS_HOSTNAME', '127.0.0.1'),
             'port' => env('RDS_PORT', '3306'),
-            'database' => env('RDS_DB_NAME', 'forge'),
-            'username' => env('RDS_USERNAME', 'forge'),
+            'database' => env('RDS_DB_NAME', ''),
+            'username' => env('RDS_USERNAME', ''),
             'password' => env('RDS_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
