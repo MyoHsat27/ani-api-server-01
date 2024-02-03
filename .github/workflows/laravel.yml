@@ -9,12 +9,11 @@ on:
 jobs:
   deploy_staging:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/staging'
 
     steps:
     - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
       with:
-        php-version: '8.1'
+        php-version: '8.0'
     - uses: actions/checkout@v3
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
